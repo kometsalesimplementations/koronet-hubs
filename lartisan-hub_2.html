@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lartisan Roses LLC — Implementation Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh}
+.hub{max-width:1100px;margin:0 auto;padding:24px 16px}
+.topbar{background:#fff;border:0.5px solid #e0ded6;border-radius:12px;padding:20px 24px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.topbar h1{font-size:20px;font-weight:500}
+.topbar p{font-size:13px;color:#73726c;margin-top:2px}
+.badge{font-size:11px;padding:4px 12px;border-radius:20px;font-weight:500;background:#e6f1fb;color:#185fa5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.stat{background:#fff;border:0.5px solid #e0ded6;border-radius:10px;padding:14px}
+.stat-l{font-size:10px;color:#73726c;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px}
+.stat-v{font-size:20px;font-weight:500}
+.stat-s{font-size:10px;color:#888780;margin-top:1px}
+.card{background:#fff;border:0.5px solid #e0ded6;border-radius:12px;overflow:hidden}
+.tabs{display:flex;border-bottom:0.5px solid #e0ded6;overflow-x:auto}
+.tab{font-size:13px;padding:13px 16px;cursor:pointer;color:#73726c;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;font-family:inherit}
+.tab.active{color:#1a1a18;border-bottom-color:#1a1a18;font-weight:500}
+.tab:hover{background:#f8f7f4}
+.tab-sep{width:1px;background:#e0ded6;margin:8px 0;flex-shrink:0}
+.tab-int{color:#888780!important;font-size:12px!important}
+.panel{display:none;padding:22px}
+.panel.active{display:block}
+.sl{font-size:11px;color:#73726c;text-transform:uppercase;letter-spacing:0.5px;font-weight:500;margin-bottom:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.ic{background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:10px;padding:14px}
+.mr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid #e0ded6;font-size:12px}
+.mr:last-child{border-bottom:none}
+.ml{color:#73726c}
+.no-data{font-size:12px;color:#b4b2a9;font-style:italic}
+.div{height:0.5px;background:#e0ded6;margin:16px 0}
+.ti{background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:8px;padding:11px;display:flex;align-items:center;gap:9px}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0}
+.avms{background:#eaf3de;color:#3b6d11}
+.avbl{background:#e6f1fb;color:#185fa5}
+.tr2{font-size:10px;color:#73726c}
+.tn{font-size:12px;font-weight:500}
+.ko-pending{background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:10px;padding:28px 20px;text-align:center;margin-bottom:18px}
+.ko-pending p{font-size:13px;color:#b4b2a9;font-style:italic;margin-bottom:4px}
+.ko-pending span{font-size:11px;color:#c8c6bd}
+.ko-label{font-size:11px;color:#73726c;text-transform:uppercase;letter-spacing:0.5px;font-weight:500;margin-bottom:6px}
+.ko-area{width:100%;min-height:180px;border:0.5px solid #e0ded6;border-radius:8px;padding:14px;font-family:inherit;font-size:13px;color:#444441;line-height:1.6;background:#fff;resize:vertical}
+.ko-area:focus{outline:none;border-color:#1a1a18}
+.ko-hint{font-size:11px;color:#b4b2a9;margin-top:6px}
+.pct-label{display:flex;justify-content:space-between;font-size:11px;color:#73726c;margin-bottom:5px}
+.pct-bar{height:6px;background:#e0ded6;border-radius:3px;overflow:hidden;margin-bottom:18px}
+.pct-fill{height:100%;border-radius:3px;background:#1a1a18}
+.workflow-wrap{display:flex;gap:14px;margin-bottom:18px}
+.wsvg{flex-shrink:0}
+.wdetail{flex:1;background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:10px;padding:16px;min-height:280px}
+.wdetail h3{font-size:14px;font-weight:500;margin-bottom:5px}
+.wd{font-size:12px;color:#73726c;line-height:1.5;margin-bottom:12px}
+.wempty{font-size:12px;color:#b4b2a9}
+.tl{display:flex;flex-direction:column;gap:4px;margin-bottom:18px}
+.tk{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;border:0.5px solid #e0ded6;background:#f8f7f4}
+.tk.done{background:#eaf3de;border-color:#c0dd97}
+.td2{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;font-weight:500}
+.tdd{background:#639922;color:#fff}
+.tdt{background:#e0ded6;color:#888780}
+.tk-n{font-size:12px;flex:1}
+.tk.done .tk-n{color:#27500a}
+.sp{font-size:10px;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.spd{background:#eaf3de;color:#3b6d11;border:0.5px solid #c0dd97}
+.spt{background:#f1efe8;color:#888780;border:0.5px solid #d3d1c7}
+.rcs{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.rc{background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rt{font-size:13px;font-weight:500}
+.rm{font-size:11px;color:#73726c;margin-top:2px}
+.rl{font-size:12px;color:#185fa5;text-decoration:none;padding:4px 10px;border:0.5px solid #85b7eb;border-radius:7px}
+.rl:hover{background:#e6f1fb}
+.tb{background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:10px;padding:14px;margin-bottom:10px}
+.th{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.tt{font-size:13px;font-weight:500}
+.cb{font-size:11px;padding:3px 9px;border:0.5px solid #e0ded6;border-radius:6px;cursor:pointer;background:#fff;font-family:inherit}
+.cb:hover{background:#f8f7f4}
+.tx{font-size:12px;color:#444441;line-height:1.6;white-space:pre-line}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.mc{background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:10px;padding:16px;text-align:center}
+.mt{font-size:30px;font-weight:500;margin:6px 0;color:#639922}
+.ml2{font-size:12px;color:#73726c}
+.pb{height:4px;background:#e0ded6;border-radius:2px;overflow:hidden;margin-top:8px}
+.pf{height:100%;border-radius:2px;background:#639922}
+.ac{background:#fcebeb;border:0.5px solid #f09595;border-radius:10px;padding:13px;margin-bottom:8px}
+.ac h4{font-size:13px;font-weight:500;color:#a32d2d;margin-bottom:3px}
+.ac p{font-size:12px;color:#791f1f}
+.ao{background:#eaf3de;border:0.5px solid #c0dd97;border-radius:10px;padding:13px;margin-bottom:8px}
+.ao h4{font-size:13px;font-weight:500;color:#27500a;margin-bottom:3px}
+.ao p{font-size:12px;color:#3b6d11}
+.health-note{background:#faeeda;border:0.5px solid #ef9f27;border-radius:10px;padding:13px;margin-bottom:12px}
+.hn-l{font-size:11px;font-weight:500;color:#854f0b;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px}
+.hn-t{font-size:12px;color:#633806}
+</style>
+</head>
+<body>
+<div class="hub">
+  <div class="topbar">
+    <div><h1>Lartisan Roses LLC</h1><p>Komet Core Importer/Grower · Sales rep: Felipe Mesa · Implementer: Manuel Szajowicz</p></div>
+    <span class="badge">Kickoff and Preparation</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-l">Contract start</div><div class="stat-v">Apr 13</div><div class="stat-s">2026</div></div>
+    <div class="stat"><div class="stat-l">Kickoff</div><div class="stat-v">Apr 15</div><div class="stat-s">2026</div></div>
+    <div class="stat"><div class="stat-l">Est. go live</div><div class="stat-v">May 26</div><div class="stat-s">2026</div></div>
+    <div class="stat"><div class="stat-l">Completion</div><div class="stat-v">0%</div><div class="stat-s">Salesforce PMT</div></div>
+    <div class="stat"><div class="stat-l">Recordings</div><div class="stat-v">0</div><div class="stat-s">via Fathom</div></div>
+  </div>
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" onclick="show('ci',this)">Customer info</button>
+      <button class="tab" onclick="show('ko',this)">Kickoff</button>
+      <button class="tab" onclick="show('tr',this)">Training</button>
+      <button class="tab" onclick="show('pg',this)">Pre go live</button>
+      <div class="tab-sep"></div>
+      <button class="tab tab-int" onclick="show('in',this)">🔒 Internal</button>
+    </div>
+
+    <div id="p-ci" class="panel active">
+      <p class="sl">ORA — Operational Readiness Assessment</p>
+      <div class="two" style="margin-bottom:10px">
+        <div class="ic">
+          <div style="font-size:11px;font-weight:500;color:#73726c;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px">Business overview</div>
+          <div class="mr"><span class="ml">Annual GMV</span><span>USD 1,000,000</span></div>
+          <div class="mr"><span class="ml">Est. active clients</span><span>30</span></div>
+          <div class="mr"><span class="ml">Client types</span><span>Importer · Wholesaler</span></div>
+          <div class="mr"><span class="ml">Primary sales channels</span><span>Standing Orders · Open Market · Phone</span></div>
+          <div class="mr"><span class="ml">Company team size</span><span>3</span></div>
+          <div class="mr"><span class="ml">Buys from origin</span><span>Yes</span></div>
+        </div>
+        <div class="ic">
+          <div style="font-size:11px;font-weight:500;color:#73726c;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px">GMV breakdown</div>
+          <div class="mr"><span class="ml">Standing Orders (%)</span><span>10%</span></div>
+          <div class="mr"><span class="ml">Open Market (%)</span><span>90%</span></div>
+          <div class="mr"><span class="ml">Cash &amp; Carry (%)</span><span>0%</span></div>
+          <div class="mr"><span class="ml">Online Sales (%)</span><span>0% · New op, 6ha farm</span></div>
+        </div>
+      </div>
+      <div class="two">
+        <div class="ic">
+          <div style="font-size:11px;font-weight:500;color:#73726c;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px">Payments</div>
+          <div class="mr"><span class="ml">Payment via Cards (%)</span><span>0%</span></div>
+          <div class="mr"><span class="ml">Payment via ACH (%)</span><span>0%</span></div>
+          <div class="mr"><span class="ml">Payment via Checks (%)</span><span>0%</span></div>
+          <div class="mr"><span class="ml">Clients accept card payments</span><span>Yes</span></div>
+        </div>
+        <div class="ic">
+          <div style="font-size:11px;font-weight:500;color:#73726c;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px">Logistics & systems</div>
+          <div class="mr"><span class="ml">Has handler partner</span><span>Yes — Fresh Logistics</span></div>
+          <div class="mr"><span class="ml">Has logistics partner</span><span>Yes — Fresh Logistics</span></div>
+          <div class="mr"><span class="ml">Has active FedEx account</span><span>No</span></div>
+          <div class="mr"><span class="ml">Requires accounting integration</span><span>No</span></div>
+          <div class="mr"><span class="ml">Requires API integration</span><span>No</span></div>
+        </div>
+      </div>
+      <div class="div"></div>
+      <p class="sl">Success Form</p>
+      <div class="two">
+        <div class="ic">
+          <div class="mr"><span class="ml">Executive Sponsor</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">Project Champion</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">eCommerce / Sales Lead</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">Finance Lead</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">IT / Systems Lead</span><span class="no-data">No info</span></div>
+        </div>
+        <div class="ic">
+          <div class="mr"><span class="ml">Active customers</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">Sells in</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">Payment methods</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">Online sales channel</span><span class="no-data">No info</span></div>
+          <div class="mr"><span class="ml">Main goal</span><span class="no-data">No info</span></div>
+        </div>
+      </div>
+      <div class="div"></div>
+      <p class="sl">Team</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+        <div class="ti"><div class="av avms">MS</div><div><div class="tr2">Implementer</div><div class="tn">Manuel Szajowicz</div></div></div>
+        <div class="ti"><div class="av avbl">FM</div><div><div class="tr2">Sales rep</div><div class="tn">Felipe Mesa</div></div></div>
+      </div>
+    </div>
+
+    <div id="p-ko" class="panel">
+      <div class="ko-pending">
+        <p>Kickoff not yet scheduled</p>
+        <span>Once the kickoff meeting takes place, add the summary here</span>
+      </div>
+      <p class="ko-label">Meeting summary</p>
+      <textarea class="ko-area" placeholder="Add key points discussed, agreements reached, scope confirmed, and any open items from the kickoff meeting..."></textarea>
+      <p class="ko-hint">This is the single reference after the meeting — no need for a separate document.</p>
+    </div>
+
+    <div id="p-tr" class="panel">
+      <p class="sl">How your business flows in Komet · click any step</p>
+      <div class="workflow-wrap">
+        <div class="wsvg">
+          <svg width="230" viewBox="0 0 230 660" xmlns="http://www.w3.org/2000/svg" style="pointer-events:all;overflow:visible">
+            <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b4b2a9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+            <g id="wn0" style="cursor:pointer" onclick="wsel(0)"><rect x="20" y="10" width="190" height="42" rx="8" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="27" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Purchase Order</text><text x="115" y="43" text-anchor="middle" font-size="10" fill="#73726c" font-family="-apple-system,sans-serif">Future sales</text></g>
+            <line x1="115" y1="52" x2="115" y2="72" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <g id="wn1" style="cursor:pointer" onclick="wsel(1)"><rect x="20" y="72" width="190" height="42" rx="8" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="89" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">PO Confirmed</text><text x="115" y="105" text-anchor="middle" font-size="10" fill="#73726c" font-family="-apple-system,sans-serif">Future inventory visible</text></g>
+            <line x1="115" y1="114" x2="115" y2="134" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <g id="wn2" style="cursor:pointer" onclick="wsel(2)"><rect x="20" y="134" width="190" height="42" rx="8" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="151" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Prebook &amp; Allocation</text><text x="115" y="167" text-anchor="middle" font-size="10" fill="#73726c" font-family="-apple-system,sans-serif">Manual or eCommerce</text></g>
+            <line x1="115" y1="176" x2="115" y2="196" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <g id="wn3" style="cursor:pointer" onclick="wsel(3)"><rect x="20" y="196" width="190" height="42" rx="8" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="213" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Staging Area</text><text x="115" y="229" text-anchor="middle" font-size="10" fill="#73726c" font-family="-apple-system,sans-serif">Confirm or scan boxes</text></g>
+            <text x="115" y="258" text-anchor="middle" font-size="9" fill="#b4b2a9" font-family="-apple-system,sans-serif">linked to customer?</text>
+            <path d="M65 238 L65 268 L65 280" fill="none" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <text x="50" y="265" text-anchor="middle" font-size="9" fill="#73726c" font-family="-apple-system,sans-serif">Yes</text>
+            <path d="M165 238 L165 268 L165 280" fill="none" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <text x="180" y="265" text-anchor="middle" font-size="9" fill="#73726c" font-family="-apple-system,sans-serif">No</text>
+            <g id="wn4a" style="cursor:pointer" onclick="wsel(4)"><rect x="10" y="280" width="110" height="36" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="65" y="302" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Invoice generated</text></g>
+            <g id="wn4b" style="cursor:pointer" onclick="wsel(5)"><rect x="128" y="280" width="92" height="36" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="174" y="296" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Open Market</text><text x="174" y="309" text-anchor="middle" font-size="9" fill="#73726c" font-family="-apple-system,sans-serif">Order Entry</text></g>
+            <path d="M174 316 L174 350 L128 350 L128 340" fill="none" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <line x1="65" y1="316" x2="65" y2="350" stroke="#b4b2a9" stroke-width="1"/>
+            <line x1="65" y1="350" x2="115" y2="350" stroke="#b4b2a9" stroke-width="1"/>
+            <line x1="115" y1="350" x2="115" y2="366" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <g id="wn5" style="cursor:pointer" onclick="wsel(6)"><rect x="20" y="366" width="190" height="36" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="388" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Shipping out</text></g>
+            <line x1="115" y1="402" x2="115" y2="420" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <text x="115" y="435" text-anchor="middle" font-size="9" fill="#b4b2a9" font-family="-apple-system,sans-serif" letter-spacing="0.3">PAYMENT COLLECTION</text>
+            <g id="wn6a" style="cursor:pointer" onclick="wsel(7)"><rect x="8" y="440" width="50" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="33" y="458" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Spot</text><text x="33" y="474" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Pay now</text></g>
+            <g id="wn6b" style="cursor:pointer" onclick="wsel(7)"><rect x="64" y="440" width="50" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="89" y="458" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">AR</text><text x="89" y="474" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Receive</text></g>
+            <g id="wn6c" style="cursor:pointer" onclick="wsel(7)"><rect x="120" y="440" width="50" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="145" y="458" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Link</text><text x="145" y="474" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Invoice</text></g>
+            <g id="wn6d" style="cursor:pointer" onclick="wsel(7)"><rect x="176" y="440" width="48" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="200" y="458" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Statement</text><text x="200" y="474" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">&amp; Links</text></g>
+            <line x1="115" y1="482" x2="115" y2="500" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+            <g id="wn7" style="cursor:pointer" onclick="wsel(8)"><rect x="20" y="500" width="190" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="518" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Reconciliation</text><text x="115" y="534" text-anchor="middle" font-size="10" fill="#73726c" font-family="-apple-system,sans-serif">Payouts · AP/PO · AWB</text></g>
+          </svg>
+        </div>
+        <div class="wdetail" id="wdetail"><p class="wempty">Click any step in the workflow to see training sessions linked to that part of your business.</p></div>
+      </div>
+
+      <div class="div"></div>
+      <p class="sl">Training path</p>
+      <div class="tl" id="task-list"></div>
+
+      <div class="div"></div>
+      <p class="sl">Session recordings · via Fathom</p>
+      <div class="rcs">
+        <div class="rc">
+          <div><div class="rt">No recordings yet</div><div class="rm">Sessions will appear here after kickoff</div></div>
+          <a class="rl" href="https://fathom.video/teams/koronet.com" target="_blank">Open Fathom ↗</a>
+        </div>
+      </div>
+
+      <div class="div"></div>
+      <p class="sl">Email templates</p>
+      <div class="tb">
+        <div class="th"><span class="tt">💳 Payment method request · Send in Week 2</span><button class="cb" onclick="copyTpl(this)">Copy template</button></div>
+        <div class="tx">Dear [Client's Name],
+
+Exciting news! We're partnering with Koronet Payments to bring you a more seamless and secure payment experience.
+
+Very soon, you'll receive a separate email requesting your preferred payment method (credit card or bank account) through a trusted and safe platform.
+
+Keep an eye on your inbox! Providing this information will help us process your future orders quickly and efficiently.
+
+As always, we're here if you have any questions.
+
+Best regards,</div>
+      </div>
+      <div class="tb">
+        <div class="th"><span class="tt">🛒 eCommerce invitation · Send in Week 5</span><button class="cb" onclick="copyTpl(this)">Copy template</button></div>
+        <div class="tx">Dear [Client's Name],
+
+We're excited to share that your online store is now ready!
+
+You can now browse our live inventory, place orders, and check your order status anytime — 24 hours a day, 7 days a week.
+
+To get started, simply click the link below to create your account and place your first order online.
+
+[eCommerce link]
+
+If you have any questions or need help getting set up, don't hesitate to reach out.
+
+Best regards,</div>
+      </div>
+    </div>
+
+    <div id="p-pg" class="panel">
+      <p class="sl">Pre go live milestones</p>
+      <div class="mg">
+        <div class="mc"><div class="ml2">Payment methods saved</div><div class="mt">50%</div><div class="ml2">of active buyers</div><div class="pb"><div class="pf" style="width:0%"></div></div></div>
+        <div class="mc"><div class="ml2">eCommerce users</div><div class="mt">10</div><div class="ml2">created before go live</div><div class="pb"><div class="pf" style="width:0%"></div></div></div>
+        <div class="mc"><div class="ml2">K2K connections</div><div class="mt">5</div><div class="ml2">active connections</div><div class="pb"><div class="pf" style="width:0%"></div></div></div>
+      </div>
+      <div style="background:#f8f7f4;border:0.5px solid #e0ded6;border-radius:10px;padding:13px;font-size:12px;color:#73726c">
+        Progress will update as the implementation advances. Confirm targets with client once scope is finalized after kickoff.
+      </div>
+    </div>
+
+    <div id="p-in" class="panel">
+      <p class="sl">Internal alerts · not visible to client</p>
+      <div class="health-note">
+        <div class="hn-l">Health note from PMT</div>
+        <div class="hn-t">13 Apr: Sales should give us green light between today and tomorrow</div>
+      </div>
+      <div class="ao"><h4>Sales Handover in progress</h4><p>Waiting for sales green light. No kickoff or training tasks have started. All phases at 0%.</p></div>
+      <div class="ac"><h4>Koronet Payments — not yet discussed</h4><p>KP has not been mentioned in any session. Expected to be introduced in Week 2 of training.</p></div>
+      <div class="ac"><h4>eCommerce — not yet discussed</h4><p>eCommerce has not been mentioned in any session. Expected to be introduced in Week 5 of training.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const tasks = [
+  "Komet general tour",
+  "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually",
+  "Customers: How to collect customer payment methods",
+  "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
+  "Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments",
+  "Grower Portal / Grower Menu: Confirm PO's",
+  "Grower Portal / Grower Menu: Add products to an AWB and print labels",
+  "Tracking: How to track inbound shipments",
+  "Pricing: GPM, AWB Freight, Handling and other charges",
+  "How to Manage Future Inventory",
+  "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
+  "Manual Prebooks - Future Sales and allocation if applicable",
+  "Prebook Summary: How to fullfill Prebook Orders Standard & Fulfillment Guide",
+  "Staging Area: Arrival date, manual confirmation, box scanning & batch labels",
+  "Order Entry: Invoice confirmation and Print Documents",
+  "Shipping: Outbound shipments / Picking items using bunch labels",
+  "How to sell Open Market - eCommerce orders and Manual Orders",
+  "How to Get Paid: Pay & Confirm / POS machine",
+  "How to Get Paid: Invoice Payment Links",
+  "How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments",
+  "AR: Payment History (Refunds, Chargebacks)",
+  "Payouts and settlement report",
+  "Full Flow Practice & Practice edge cases (e.g. Cancelations)",
+  "eCommerce Settings, eCommerce Carrousel and How to create or invite eCommerce users",
+  "E-commerce: Identify top eCommerce candidates for the go live",
+  "K2K Connections: How to send and accept connection requests",
+  "K2K Connections: How to fulfill K2K orders end to end",
+  "Set up always on Buyer/Vendor Connections",
+  "Full Flow Practice & Practice edge cases (e.g. Cancelations)",
+  "How to generate Statements and use payment links",
+  "Order Entry: Customer Credits",
+  "QC: Inspections and Vendor Credits",
+  "How to create Customer and Vendor Standing Orders",
+  "A/P - PO Reconciliation, AWB and Inbound Reconciliation",
+  "Reports overview",
+  "Koronet Payments full training — Prepaid, Scheduled Payments, Payment Links, Order Entry & AR Collections",
+  "Instruct client to inform their buyers about upcoming eCommerce user creation",
+  "Practice end-to-end eCommerce flow — user invitation (email, QR code & link), deep links, tags and first order placement"
+];
+
+const tl = document.getElementById('task-list');
+tasks.forEach(t => {
+  const div = document.createElement('div');
+  div.className = 'tk';
+  div.innerHTML = `<div class="td2 tdt">–</div><div class="tk-n">${t}</div><span class="sp spt">Not started</span>`;
+  tl.appendChild(div);
+});
+
+const wdata = [
+  {title:"Purchase Order",desc:"Creating and managing future sales purchase orders — the starting point of the entire flow.",tasks:["How to create a Standalone PO Future Sales (Manual, using Templates and Data import)","Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments","Grower Portal / Grower Menu: Confirm PO's"]},
+  {title:"PO Confirmed — Future Inventory",desc:"Once confirmed, future inventory becomes visible and prebooks can be created.",tasks:["Grower Portal / Grower Menu: Add products to an AWB and print labels","How to Manage Future Inventory","Tracking: How to track inbound shipments"]},
+  {title:"Prebook & Allocation",desc:"Prebooks created manually or online, then allocated against the PO based on what's in transit.",tasks:["Manual Prebooks - Future Sales and allocation if applicable","Prebook Summary: How to fullfill Prebook Orders Standard & Fulfillment Guide","How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment"]},
+  {title:"Staging Area",desc:"Inventory arrives. Lines linked to a customer generate invoices; unlinked lines become open market.",tasks:["Staging Area: Arrival date, manual confirmation, box scanning & batch labels"]},
+  {title:"Invoice — Customer line",desc:"When a line is confirmed or scanned in staging and linked to a customer, an invoice is generated.",tasks:["Order Entry: Invoice confirmation and Print Documents","Shipping: Outbound shipments / Picking items using bunch labels"]},
+  {title:"Open Market",desc:"Unlinked lines become open market inventory available for manual or eCommerce orders.",tasks:["How to sell Open Market - eCommerce orders and Manual Orders"]},
+  {title:"Shipping out",desc:"Outbound shipments to the final customer — at their warehouse (wholesaler) or at the airport (importer).",tasks:["Shipping: Outbound shipments / Picking items using bunch labels"]},
+  {title:"Payment Collection",desc:"Multiple ways to collect — pay on the spot, AR receive, invoice link, or statement.",tasks:["How to Get Paid: Pay & Confirm / POS machine","How to Get Paid: Invoice Payment Links","How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments","AR: Payment History (Refunds, Chargebacks)","Payouts and settlement report","How to generate Statements and use payment links"]},
+  {title:"Reconciliation",desc:"Close the loop — reconcile AP/PO and AWBs, generate reports, review payouts and settlement.",tasks:["A/P - PO Reconciliation, AWB and Inbound Reconciliation","Reports overview"]}
+];
+
+const wNodes=['wn0','wn1','wn2','wn3','wn4a','wn4b','wn5','wn6a','wn6b','wn6c','wn6d','wn7'];
+const wMap=  [  0,    1,    2,    3,    4,     5,    6,    7,     7,     7,     7,     8  ];
+
+function wsel(i){
+  wNodes.forEach((id,j)=>{
+    const g=document.getElementById(id);if(!g)return;
+    const r=g.querySelector('rect');if(!r)return;
+    const active=wMap[j]===i;
+    r.setAttribute('fill',active?'#1a1a18':'#f8f7f4');
+    r.setAttribute('stroke',active?'#1a1a18':'#e0ded6');
+    g.querySelectorAll('text').forEach(t=>t.setAttribute('fill',active?'#fff':'#1a1a18'));
+  });
+  const d=wdata[i];
+  const html=d.tasks.map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;border:0.5px solid #e0ded6;background:#fff;margin-bottom:4px"><div style="width:14px;height:14px;border-radius:50%;background:#e0ded6;display:flex;align-items:center;justify-content:center;font-size:8px;color:#888780;flex-shrink:0">–</div><div style="font-size:11px;color:#444441">${t}</div></div>`).join('');
+  document.getElementById('wdetail').innerHTML=`<h3>${d.title}</h3><p class="wd">${d.desc}</p>${html}`;
+}
+
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function copyTpl(btn){
+  const text=btn.closest('.tb').querySelector('.tx').innerText;
+  navigator.clipboard.writeText(text).then(()=>{btn.textContent='✓ Copied';setTimeout(()=>btn.textContent='Copy template',2000);});
+}
+</script>
+</body>
+</html>

@@ -298,12 +298,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <line x1="115" y1="498" x2="115" y2="514" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
             <text x="115" y="524" text-anchor="middle" font-size="9" fill="#b4b2a9" font-family="-apple-system,sans-serif" letter-spacing="0.3">PAYMENT COLLECTION</text>
             <g id="wn8a" style="cursor:pointer" onclick="wsel(9)"><rect x="8" y="530" width="60" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="38" y="548" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">AR</text><text x="38" y="562" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Receive</text></g>
-            <g id="wn8b" style="cursor:pointer" onclick="wsel(9)"><rect x="80" y="530" width="62" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="111" y="548" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Link</text><text x="111" y="562" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Invoice</text></g>
-            <g id="wn8c" style="cursor:pointer" onclick="wsel(9)"><rect x="154" y="530" width="68" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="188" y="545" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Statement</text><text x="188" y="557" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">&amp; Payment</text><text x="188" y="569" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Links</text></g>
+            <g id="wn8b" style="cursor:pointer" onclick="wsel(10)"><rect x="80" y="530" width="62" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="111" y="545" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Invoices &amp;</text><text x="111" y="557" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Statements</text></g>
+            <g id="wn8c" style="cursor:pointer" onclick="wsel(11)"><rect x="154" y="530" width="68" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="188" y="545" text-anchor="middle" font-size="9" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Statement</text><text x="188" y="557" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">&amp; Payment</text><text x="188" y="569" text-anchor="middle" font-size="8" fill="#73726c" font-family="-apple-system,sans-serif">Links</text></g>
             <path d="M38 572 L38 592 L115 592 L115 602" fill="none" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
             <path d="M111 572 L111 592" fill="none" stroke="#b4b2a9" stroke-width="1"/>
             <path d="M188 572 L188 592 L117 592" fill="none" stroke="#b4b2a9" stroke-width="1"/>
-            <g id="wn9" style="cursor:pointer" onclick="wsel(10)"><rect x="20" y="602" width="190" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="619" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Reconciliation</text><text x="115" y="635" text-anchor="middle" font-size="10" fill="#73726c" font-family="-apple-system,sans-serif">Payouts · AP/PO · AWB</text></g>
+            <g id="wn9" style="cursor:pointer" onclick="wsel(12)"><rect x="20" y="602" width="190" height="42" rx="7" fill="#f8f7f4" stroke="#e0ded6" stroke-width="0.5"/><text x="115" y="619" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" font-family="-apple-system,sans-serif">Reconciliation</text><text x="115" y="635" text-anchor="middle" font-size="10" fill="#73726c" font-family="-apple-system,sans-serif">Payouts · AP/PO · AWB</text></g>
           </svg>
         </div>
         <div class="wdetail" id="wdetail"><p class="wempty">Click any step in the workflow to see training sessions linked to that part of your business.</p></div>
@@ -441,18 +441,22 @@ tasks.forEach(t => {
 });
 
 const wdata = [
-  {title:"Purchase Order",desc:"Creating and managing future sales purchase orders — the starting point of the entire flow.",tasks:["How to create a Standalone PO Future Sales (Manual, using Templates and Data import)","Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments","Grower Portal / Grower Menu: Confirm PO's"]},
-  {title:"PO Confirmed — Future Inventory",desc:"Once confirmed, future inventory becomes visible and prebooks can be created.",tasks:["Grower Portal / Grower Menu: Add products to an AWB and print labels","How to Manage Future Inventory","Tracking: How to track inbound shipments"]},
-  {title:"Prebook & Allocation",desc:"Prebooks created manually or online, then allocated against the PO based on what's in transit.",tasks:["Manual Prebooks - Future Sales and allocation if applicable","Prebook Summary: How to fullfill Prebook Orders Standard & Fulfillment Guide","How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment"]},
-  {title:"Staging Area",desc:"Inventory arrives. Lines linked to a customer generate invoices; unlinked lines become open market.",tasks:["Staging Area: Arrival date, manual confirmation, box scanning & batch labels"]},
-  {title:"Invoice — Customer line",desc:"When a line is confirmed or scanned in staging and linked to a customer, an invoice is generated.",tasks:["Order Entry: Invoice confirmation and Print Documents","Shipping: Outbound shipments / Picking items using bunch labels"]},
-  {title:"Open Market",desc:"Unlinked lines become open market inventory available for manual or eCommerce orders.",tasks:["How to sell Open Market - eCommerce orders and Manual Orders"]},
-  {title:"Shipping out",desc:"Outbound shipments to the final customer — at their warehouse (wholesaler) or at the airport (importer).",tasks:["Shipping: Outbound shipments / Picking items using bunch labels"]},
-  {title:"Payment Collection",desc:"Multiple ways to collect — pay on the spot, AR receive, invoice link, or statement.",tasks:["How to Get Paid: Pay & Confirm / POS machine","How to Get Paid: Invoice Payment Links","How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments","AR: Payment History (Refunds, Chargebacks)","Payouts and settlement report","How to generate Statements and use payment links"]},
-  {title:"Reconciliation",desc:"Close the loop — reconcile AP/PO and AWBs, generate reports, review payouts and settlement.",tasks:["A/P - PO Reconciliation, AWB and Inbound Reconciliation","Reports overview"]}
-];
+      {title:"Purchase Order",desc:"Future sales",tasks:["How to create a standalone PO","Future sales using templates"]},
+      {title:"PO Confirmed",desc:"Grower Portal",tasks:["How to confirm POs"]},
+      {title:"Sales",desc:"Order channel",tasks:["eCommerce orders","K2K orders","Manual orders"]},
+      {title:"eCommerce",desc:"Online checkout",tasks:["How to pay upon checkout","Order Fulfillment"]},
+      {title:"K2K Order",desc:"Vendor connection",tasks:["How to accept K2K connections"]},
+      {title:"Staging Area",desc:"Confirm or scan boxes",tasks:["How to confirm items on the staging area","How to scan items on the staging area"]},
+      {title:"Invoice generated",desc:"",tasks:["How to create an invoice"]},
+      {title:"Open Market",desc:"Order Entry",tasks:["How to create an open market order"]},
+      {title:"Shipping out",desc:"",tasks:["EDIs"]},
+      {title:"AR — Receive",desc:"Payment collection",tasks:["How to receive payments"]},
+      {title:"Invoices & Statements",desc:"Payment collection",tasks:["Payment link"]},
+      {title:"Payment Links",desc:"Payment collection",tasks:["Payment links"]},
+      {title:"Reconciliation",desc:"",tasks:["Payouts · AP/PO · AWB"]}
+    ];
 
-const wNodes=['wn0','wn1','wn2','wn3','wn4a','wn4b','wn5','wn6a','wn6b','wn6c','wn6d','wn7'];
+const wNodes=['wn0','wn1','wn2','wn3a','wn3b','wn4','wn5','wn6a','wn6b','wn7','wn8a','wn8b','wn8c','wn9'];
 const wMap=  [  0,    1,    2,    3,    4,     5,    6,    7,     7,     7,     7,     8  ];
 
 function wsel(i){

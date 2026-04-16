@@ -436,7 +436,9 @@ const tl = document.getElementById('task-list');
 tasks.forEach(t => {
   const div = document.createElement('div');
   div.className = 'tk';
-  div.innerHTML = `<div class="td2 tdt">–</div><div class="tk-n">${t}</div><span class="sp spt">Not started</span>`;
+  const taskStatuses={"Komet general tour":{s:"done",d:"Apr 16"},"How to create customers, vendors, carriers, products, hardgoods & box dimensions manually":{s:"done",d:"Apr 16"},"Customers: How to collect customer payment methods":{s:"done",d:"Apr 16"},"How to create a Standalone PO Future Sales (Manual, using Templates and Data import)":{s:"done",d:"Apr 16"},"Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments":{s:"done",d:"Apr 16"},"Grower Portal / Grower Menu: Confirm PO's":{s:"done",d:"Apr 16"},"Grower Portal / Grower Menu: Add products to an AWB and print labels":{s:"done",d:"Apr 16"},"Tracking: How to track inbound shipments":{s:"done",d:"Apr 16"},"How to Manage Future Inventory":{s:"done",d:"Apr 16"},"Pricing: GPM, AWB Freight, Handling and other charges":{s:"partial",d:"Apr 16"}};
+const st=taskStatuses[t];const stHtml=st?('<span class="sp spt" style="background:'+(st.s==='done'?'#eaf3de':'#faeeda')+';color:'+(st.s==='done'?'#275009':'#633806')+';border-color:'+(st.s==='done'?'#97c459':'#ef9f27')+'">'+(st.s==='done'?'✓':'~')+' '+st.d+'</span>'):'<span class="sp spt">Not started</span>';
+div.innerHTML = `<div class="td2 tdt">–</div><div class="tk-n">${t}</div>${stHtml}`;
   tl.appendChild(div);
 });
 

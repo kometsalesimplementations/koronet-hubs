@@ -311,7 +311,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
       <div class="div"></div>
       <p class="sl">Training path</p>
-      <div class="tl" id="task-list"></div>
+      <p class="sl" style="margin-top:16px;margin-bottom:8px">Project phases</p><div id="phases-wrap" style="margin-bottom:16px"></div><div class="tl" id="task-list"></div>
 
       <div class="div"></div>
       <p class="sl">Session recordings · via Fathom</p>
@@ -368,7 +368,7 @@ Best regards,</div>
     <div id="p-pg" class="panel">
       <p class="sl">Pre go live milestones</p>
       <div class="mg">
-        <div class="mc"><div class="ml2">Payment methods saved</div><div class="mt">50%</div><div class="ml2">of active buyers</div><div class="pb"><div class="pf" style="width:0%"></div></div></div>
+        <div class="mc"><div class="ml2">Payment methods saved</div><div class="mt">50%</div><div class="ml2">of active buyers</div><div class="pb"><div class="pf" style="width:0%"></div></div><a href="https://koronet.com/koronetpayments-pricing" target="_blank" style="font-size:10px;color:#378add;text-decoration:none;margin-top:7px;display:flex;align-items:center;gap:3px;opacity:0.85">Ver tarifas KPayments <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="#378add" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         <div class="mc"><div class="ml2">eCommerce users</div><div class="mt">10</div><div class="ml2">created before go live</div><div class="pb"><div class="pf" style="width:0%"></div></div></div>
         <div class="mc"><div class="ml2">K2K connections</div><div class="mt">5</div><div class="ml2">active connections</div><div class="pb"><div class="pf" style="width:0%"></div></div></div>
       </div>
@@ -433,6 +433,19 @@ const tasks = [
 ];
 
 const tl = document.getElementById('task-list');
+const pw=document.getElementById('phases-wrap');
+if(pw){
+  const dC=Object.values(taskStatuses).filter(s=>s.s==='done').length;
+  const pC=Object.values(taskStatuses).filter(s=>s.s==='partial').length;
+  const tPct=Math.round((dC+pC*0.5)/tasks.length*100);
+  [{n:'Sales Handover',p:62},{n:'Account Configuration',p:50},{n:'Kickoff',p:60},{n:'Training',p:tPct},{n:'Pre Go Live',p:0},{n:'Post Go Live',p:0}].forEach(ph=>{
+    const c=ph.p===0?'#b4b2a9':ph.p<50?'#ef9f27':ph.p<100?'#378add':'#639922';
+    const d=document.createElement('div');
+    d.style.cssText='margin-bottom:8px';
+    d.innerHTML='<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--c-muted);margin-bottom:3px"><span>'+ph.n+'</span><span style="font-weight:500;color:'+c+'">'+ph.p+'%</span></div><div style="background:#e0ded6;border-radius:4px;height:4px"><div style="width:'+ph.p+'%;background:'+c+';border-radius:4px;height:4px"></div></div>';
+    pw.appendChild(d);
+  });
+}
 tasks.forEach(t => {
   const div = document.createElement('div');
   div.className = 'tk';

@@ -412,28 +412,44 @@ const tasks = [
   "Order Entry: Invoice confirmation and Print Documents",
   "Shipping: Outbound shipments / Picking items using bunch labels",
   "How to sell Open Market - eCommerce orders and Manual Orders",
-  "How to Get Paid: Pay & Confirm / POS machine",
-  "How to Get Paid: Invoice Payment Links",
-  "How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments",
+  "How to Get Paid : Pay & Confirm / POS machine",
+  "How to Get Paid : Invoice Payment Links",
+  "How to Get Paid : AR: Receive Payments / POS machine, CC and ePayments",
   "AR: Payment History (Refunds, Chargebacks)",
   "Payouts and settlement report",
-  "Full Flow Practice & Practice edge cases (e.g. Cancelations)",
+  "Full Flow Practice & Practice edge cases (eg, Cancelations)",
   "eCommerce Settings, eCommerce Carrousel and How to create or invite eCommerce users",
   "E-commerce: Identify top eCommerce candidates for the go live",
-  "K2K Connections: How to send and accept connection requests",
-  "K2K Connections: How to fulfill K2K orders end to end",
-  "Set up always on Buyer/Vendor Connections",
-  "Full Flow Practice & Practice edge cases (e.g. Cancelations)",
+  "How to create a Standalone PO for Hardgoods",
+  "Inventory Hardgoods receiving",
+  "Hardgoods invoicing",
+  "Hardgoods full Flow Practice & Practice edge cases (eg, Cancelations)",
+  "K2K Connections: How to send and accept connection requests, browse vendor inventory and check availability",
+  "K2K Connections: How to sell K2K inventory and fulfill K2K orders end to end",
+  "Set up always on Buyer/ Vendor Connections",
+  "Full Flow Practice & Practice edge cases (eg, Cancelations)",
   "How to generate Statements and use payment links",
   "Order Entry: Customer Credits",
-  "QC: Inspections and Vendor Credits",
-  "How to create Customer and Vendor Standing Orders",
-  "A/P - PO Reconciliation, AWB and Inbound Reconciliation",
+  "QC : Inspections and Vendor Credits",
+  "How to create Customer and Vendor Standing Order's",
+  "A/P - PO Reconciliation, AWB and Inbound Truck Freight Reconciliation",
   "Reports overview",
   "Koronet Payments full training — Prepaid, Scheduled Payments, Payment Links, Order Entry & AR Collections",
   "Instruct client to inform their buyers about upcoming eCommerce user creation",
   "Practice end-to-end eCommerce flow — user invitation (email, QR code & link), deep links, tags and first order placement"
 ];
+const taskStatuses = {
+  "Komet general tour":{s:"done",d:"Apr 16"},
+  "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually":{s:"done",d:"Apr 16"},
+  "Customers: How to collect customer payment methods":{s:"done",d:"Apr 16"},
+  "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)":{s:"done",d:"Apr 16"},
+  "Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments":{s:"done",d:"Apr 16"},
+  "Grower Portal / Grower Menu: Confirm PO's":{s:"done",d:"Apr 16"},
+  "Grower Portal / Grower Menu: Add products to an AWB and print labels":{s:"done",d:"Apr 16"},
+  "Tracking: How to track inbound shipments":{s:"done",d:"Apr 16"},
+  "How to Manage Future Inventory":{s:"done",d:"Apr 16"},
+  "Pricing: GPM, AWB Freight, Handling and other charges":{s:"partial",d:"Apr 16"}
+};
 
 const tl = document.getElementById('task-list');
 const pw=document.getElementById('phases-wrap');
@@ -452,8 +468,7 @@ if(pw){
 tasks.forEach(t => {
   const div = document.createElement('div');
   div.className = 'tk';
-  const taskStatuses={"Komet general tour":{s:"done",d:"Apr 16"},"How to create customers, vendors, carriers, products, hardgoods & box dimensions manually":{s:"done",d:"Apr 16"},"Customers: How to collect customer payment methods":{s:"done",d:"Apr 16"},"How to create a Standalone PO Future Sales (Manual, using Templates and Data import)":{s:"done",d:"Apr 16"},"Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments":{s:"done",d:"Apr 16"},"Grower Portal / Grower Menu: Confirm PO's":{s:"done",d:"Apr 16"},"Grower Portal / Grower Menu: Add products to an AWB and print labels":{s:"done",d:"Apr 16"},"Tracking: How to track inbound shipments":{s:"done",d:"Apr 16"},"How to Manage Future Inventory":{s:"done",d:"Apr 16"},"Pricing: GPM, AWB Freight, Handling and other charges":{s:"partial",d:"Apr 16"}};
-const st=taskStatuses[t];const stHtml=st?('<span class="sp spt" style="background:'+(st.s==='done'?'#eaf3de':'#faeeda')+';color:'+(st.s==='done'?'#275009':'#633806')+';border-color:'+(st.s==='done'?'#97c459':'#ef9f27')+'">'+(st.s==='done'?'✓':'~')+' '+st.d+'</span>'):'<span class="sp spt">Not started</span>';
+  const st=taskStatuses[t];const stHtml=st?('<span class="sp spt" style="background:'+(st.s==='done'?'#eaf3de':'#faeeda')+';color:'+(st.s==='done'?'#275009':'#633806')+';border-color:'+(st.s==='done'?'#97c459':'#ef9f27')+'">'+(st.s==='done'?'✓':'~')+' '+st.d+'</span>'):'<span class="sp spt">Not started</span>';
 div.innerHTML = `<div class="td2 tdt">–</div><div class="tk-n">${t}</div>${stHtml}`;
   tl.appendChild(div);
 });

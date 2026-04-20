@@ -7,7 +7,16 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh}
-.hub{max-width:1100px;margin:0 auto;padding:24px 16px}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#7cb342;padding:20px}
+.login-box{background:#fff;border-radius:16px;padding:48px 40px;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.login-box h1{font-size:24px;font-weight:600;color:#1a1a18;margin-bottom:4px}
+.login-box .login-sub{font-size:14px;color:#73726c;margin-bottom:28px}
+.login-box input{width:100%;padding:12px 16px;border:1.5px solid #e0ded6;border-radius:10px;font-size:14px;outline:none;margin-bottom:16px;background:#f8f7f4}
+.login-box input:focus{border-color:#7cb342}
+.login-box button{width:100%;padding:14px;border:none;border-radius:10px;background:#7cb342;color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:background .15s}
+.login-box button:hover{background:#689f38}
+.login-error{color:#c62828;font-size:12px;margin-top:-8px;margin-bottom:12px;display:none}
+.hub{max-width:1100px;margin:0 auto;padding:24px 16px;display:none}
 .topbar{background:#fff;border:.5px solid #e0ded6;border-radius:12px;padding:20px 24px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .topbar h1{font-size:20px;font-weight:500}
 .topbar p{font-size:13px;color:#73726c;margin-top:2px}
@@ -114,7 +123,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 </style>
 </head>
 <body>
-<div class="hub">
+<div class="login-wrap" id="loginScreen">
+  <div class="login-box">
+    <h1>Florens Group LLC</h1>
+    <div class="login-sub">Implementation Hub</div>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <div class="login-error" id="pwError">Contraseña incorrecta.</div>
+    <button onclick="checkPw()">ENTER</button>
+  </div>
+</div>
+<div class="hub" id="hubContent">
 
 <!-- TOPBAR -->
 <div class="topbar">
@@ -475,17 +493,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
       <h3>Payment methods saved</h3>
       <div class="pg-val">—</div>
       <div class="pg-sub">of active buyers</div>
+      <div style="font-size:11px;color:#1a1a18;font-weight:500;margin-top:8px;padding-top:8px;border-top:.5px solid #e0ded6">🎯 Target: 50%</div>
       <a href="https://koronet.com/koronetpayments-pricing" target="_blank">Koronet Payment fees</a>
     </div>
     <div class="pg-card">
       <h3>eCommerce users</h3>
       <div class="pg-val">—</div>
       <div class="pg-sub">created before go live</div>
+      <div style="font-size:11px;color:#1a1a18;font-weight:500;margin-top:8px;padding-top:8px;border-top:.5px solid #e0ded6">🎯 Target: 10 users</div>
     </div>
     <div class="pg-card">
       <h3>K2K connections</h3>
       <div class="pg-val">—</div>
       <div class="pg-sub">active connections</div>
+      <div style="font-size:11px;color:#1a1a18;font-weight:500;margin-top:8px;padding-top:8px;border-top:.5px solid #e0ded6">🎯 Target: 5 connections</div>
     </div>
   </div>
   <p class="no-data">Progress will update as the implementation advances. Confirm targets with client once scope is finalized.</p>
@@ -494,6 +515,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 </div><!-- /hub -->
 
 <script>
+// Password verification
+async function checkPw() {
+  const input = document.getElementById('pwInput').value;
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  if (hashHex === '9798f7e5337fd4c3d29756e459401662ba91c0f17e353765226db423c208aa2b') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('hubContent').style.display = 'block';
+    document.body.style.background = '#f8f7f4';
+  } else {
+    document.getElementById('pwError').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
+}
+
 function showTab(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));

@@ -40,8 +40,80 @@ function requireEnv(key) {
   return v;
 }
 
+/**
+ * Upfront validation of every required secret. Prints a consolidated list of
+ * what's missing so a single run tells you everything you need to fix.
+ */
+function validateSecrets() {
+  const required = ['SF_CLIENT_ID', 'SF_CLIENT_SECRET', 'SF_USERNAME', 'SF_PASSWORD', 'SF_SECURITY_TOKEN'];
+  const missing = required.filter((k) => !process.env[k]);
+  if (missing.length) {
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.error('MISSING GITHUB SECRETS');
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.error(`The following ${missing.length} secret(s) are not set on the repo:`);
+    missing.forEach((k) => console.error(`  · ${k}`));
+    console.error('');
+    console.error('Fix: https://github.com/kometsalesimplementations/koronet-hubs/settings/secrets/actions');
+    console.error('Click "New repository secret" for each missing name above.');
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    process.exit(1);
+  }
+  const report = required.map((k) => `  ${k}: set (${process.env[k].length} chars)`).join('\n');
+  console.log('secrets present:\n' + report);
+}
+
+/**
+ * Translate common Salesforce OAuth errors into actionable instructions.
+ */
+function explainOAuthError(status, bodyText) {
+  let parsed = {};
+  try { parsed = JSON.parse(bodyText); } catch { /* ignore */ }
+  const code = parsed.error || '';
+  const desc = parsed.error_description || bodyText;
+  const lines = [
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `SALESFORCE OAUTH FAILED — HTTP ${status}`,
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `error: ${code}`,
+    `detail: ${desc}`,
+    '',
+  ];
+  if (code === 'invalid_grant') {
+    lines.push('LIKELY CAUSES (try in this order):');
+    lines.push('');
+    lines.push('1. Security token is stale. It regenerates every time the password changes.');
+    lines.push('   → Salesforce → Settings → My Personal Information → Reset My Security Token');
+    lines.push('   → Check email for the new token, update secret SF_SECURITY_TOKEN.');
+    lines.push('');
+    lines.push('2. Password is wrong in the secret.');
+    lines.push('   → Try logging in at https://login.salesforce.com with SF_USERNAME + SF_PASSWORD to verify.');
+    lines.push('');
+    lines.push('3. Connected App restricts IPs and GitHub Actions runner IP is blocked.');
+    lines.push('   → Salesforce Setup → App Manager → "Koronet Hub" → Manage → Edit Policies');
+    lines.push('   → IP Relaxation: "Relax IP restrictions"');
+    lines.push('   → Permitted Users: "All users may self-authorize"');
+    lines.push('');
+    lines.push('4. User profile does not have "API Enabled" permission.');
+    lines.push('   → Ask your Salesforce admin to enable API access for SF_USERNAME.');
+  } else if (code === 'invalid_client_id' || code === 'invalid_client') {
+    lines.push('The Consumer Key or Secret in SF_CLIENT_ID / SF_CLIENT_SECRET does not match the Connected App.');
+    lines.push('→ Salesforce Setup → App Manager → "Koronet Hub" → View → copy the consumer key/secret again.');
+  } else if (code === 'inactive_user') {
+    lines.push('The user SF_USERNAME is inactive or locked out.');
+  } else if (code === 'unsupported_grant_type') {
+    lines.push('The Connected App has username-password flow disabled.');
+    lines.push('→ Salesforce Setup → App Manager → "Koronet Hub" → Edit → OAuth Policies → enable "Username-Password Flow" (OAuth and OpenID Connect Settings).');
+  } else {
+    lines.push('Check the error description above. If unclear, open a Salesforce case with the error code.');
+  }
+  lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  return lines.join('\n');
+}
+
 async function authenticate() {
   const loginUrl = process.env.SF_LOGIN_URL || 'https://login.salesforce.com';
+  console.log(`attempting OAuth @ ${loginUrl}/services/oauth2/token ...`);
   const body = new URLSearchParams({
     grant_type: 'password',
     client_id: requireEnv('SF_CLIENT_ID'),
@@ -55,7 +127,9 @@ async function authenticate() {
     body,
   });
   if (!res.ok) {
-    throw new Error(`OAuth failed ${res.status}: ${await res.text()}`);
+    const errText = await res.text();
+    console.error(explainOAuthError(res.status, errText));
+    throw new Error(`OAuth failed ${res.status}`);
   }
   const json = await res.json();
   console.log(`auth ok · instance ${json.instance_url}`);
@@ -106,6 +180,7 @@ function normalize(raw) {
 }
 
 async function main() {
+  validateSecrets();
   const { hubs } = await readJson('config/hubs.json');
   const auth = await authenticate();
 

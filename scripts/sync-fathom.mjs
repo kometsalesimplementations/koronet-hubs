@@ -42,6 +42,17 @@ function requireEnv(key) {
   return v;
 }
 
+function validateSecrets() {
+  if (!process.env.FATHOM_API_KEY) {
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.error('MISSING GITHUB SECRET: FATHOM_API_KEY');
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.error('Add at: https://github.com/kometsalesimplementations/koronet-hubs/settings/secrets/actions');
+    process.exit(1);
+  }
+  console.log(`FATHOM_API_KEY: set (${process.env.FATHOM_API_KEY.length} chars)`);
+}
+
 async function fathomGet(pathname, params = {}) {
   const url = new URL(FATHOM_BASE + pathname);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
@@ -49,7 +60,18 @@ async function fathomGet(pathname, params = {}) {
     headers: { 'X-Api-Key': requireEnv('FATHOM_API_KEY') },
   });
   if (!res.ok) {
-    throw new Error(`GET ${url} → ${res.status}: ${await res.text()}`);
+    const body = await res.text();
+    if (res.status === 401 || res.status === 403) {
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.error(`FATHOM AUTH FAILED — HTTP ${res.status}`);
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.error('FATHOM_API_KEY is invalid or has been revoked.');
+      console.error('Fix: generate a new key in Fathom (Settings → API) and update the secret.');
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    } else if (res.status === 404) {
+      console.error(`Fathom returned 404 for ${pathname}. Endpoint may have changed — check https://docs.fathom.ai`);
+    }
+    throw new Error(`GET ${url} → ${res.status}: ${body}`);
   }
   return res.json();
 }
@@ -116,6 +138,7 @@ function statusForHits(hits) {
 }
 
 async function main() {
+  validateSecrets();
   const { hubs } = await readJson('config/hubs.json');
   const { topics } = await readJson('config/training-topics.json');
 

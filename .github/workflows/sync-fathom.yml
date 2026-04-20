@@ -1,0 +1,47 @@
+name: Sync Fathom transcripts and statuses
+
+on:
+  schedule:
+    # Cada 2 horas (Fathom cambia más seguido que PMT)
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'config/hubs.json'
+      - 'config/training-topics.json'
+      - 'scripts/sync-fathom.mjs'
+      - '.github/workflows/sync-fathom.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-fathom
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Fathom sync
+        env:
+          FATHOM_API_KEY: ${{ secrets.FATHOM_API_KEY }}
+        run: node scripts/sync-fathom.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "koronet-hubs-bot"
+          git config user.email "bot@koronet.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "no Fathom changes"
+          else
+            git commit -m "chore(fathom): sync transcripts and statuses"
+            git push
+          fi

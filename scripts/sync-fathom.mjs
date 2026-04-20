@@ -1,0 +1,171 @@
+#!/usr/bin/env node
+/**
+ * Koronet Hubs — Fathom sync
+ *
+ * Pulls meetings + transcripts from Fathom, filters per hub, matches the content
+ * against the 42 static training topics using a keyword rule, and writes:
+ *   /data/{slug}/status.json     → status per topic (Done / Partial / Not started)
+ *   /data/{slug}/recordings.json → list of session recordings for the hub
+ *
+ * Credentials (GitHub Secrets):
+ *   FATHOM_API_KEY
+ *
+ * Matching rule (deterministic, no LLM):
+ *   - Concatenate transcript text of all meetings matched to the hub.
+ *   - For each topic: count distinct keyword hits in the combined text.
+ *     0 hits        → "not_started"
+ *     1 hit         → "partial"
+ *     2+ hits       → "done"
+ *   - Criteria lives here and is versioned in git. Same input → same output.
+ */
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
+const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const FATHOM_BASE = 'https://api.fathom.ai/external/v1';
+
+async function readJson(rel) {
+  return JSON.parse(await fs.readFile(path.join(ROOT, rel), 'utf8'));
+}
+
+async function writeJson(rel, data) {
+  const abs = path.join(ROOT, rel);
+  await fs.mkdir(path.dirname(abs), { recursive: true });
+  await fs.writeFile(abs, JSON.stringify(data, null, 2) + '\n', 'utf8');
+  console.log(`wrote ${rel}`);
+}
+
+function requireEnv(key) {
+  const v = process.env[key];
+  if (!v) throw new Error(`missing env var: ${key}`);
+  return v;
+}
+
+async function fathomGet(pathname, params = {}) {
+  const url = new URL(FATHOM_BASE + pathname);
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+  const res = await fetch(url, {
+    headers: { 'X-Api-Key': requireEnv('FATHOM_API_KEY') },
+  });
+  if (!res.ok) {
+    throw new Error(`GET ${url} → ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+async function listAllMeetings() {
+  // Fathom API paginates. Loop until no next cursor.
+  const out = [];
+  let cursor = null;
+  do {
+    const params = cursor ? { cursor } : {};
+    const page = await fathomGet('/meetings', params);
+    out.push(...(page.items || page.data || []));
+    cursor = page.next_cursor || page.cursor_next || null;
+  } while (cursor);
+  return out;
+}
+
+async function getTranscript(meetingId) {
+  try {
+    const data = await fathomGet(`/meetings/${meetingId}/transcript`);
+    // Transcript shape varies — fall back to whatever text we can find.
+    if (typeof data === 'string') return data;
+    if (Array.isArray(data)) return data.map((t) => t.text || t.utterance || '').join('\n');
+    if (data.transcript) return data.transcript;
+    if (data.text) return data.text;
+    if (Array.isArray(data.segments)) return data.segments.map((s) => s.text || '').join('\n');
+    return JSON.stringify(data);
+  } catch (err) {
+    console.warn(`  no transcript for ${meetingId}: ${err.message}`);
+    return '';
+  }
+}
+
+function matchesHub(meeting, filter) {
+  const f = filter.toLowerCase();
+  const haystack = [
+    meeting.title,
+    meeting.meeting_title,
+    meeting.name,
+    meeting.client_name,
+    meeting.customer_name,
+    ...(meeting.invitees || []).map((i) => i.name || i.email || ''),
+    ...(meeting.attendees || []).map((i) => i.name || i.email || ''),
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  return haystack.includes(f);
+}
+
+function countHits(text, keywords) {
+  const t = text.toLowerCase();
+  let hits = 0;
+  for (const kw of keywords) {
+    if (t.includes(kw.toLowerCase())) hits++;
+  }
+  return hits;
+}
+
+function statusForHits(hits) {
+  if (hits === 0) return 'not_started';
+  if (hits === 1) return 'partial';
+  return 'done';
+}
+
+async function main() {
+  const { hubs } = await readJson('config/hubs.json');
+  const { topics } = await readJson('config/training-topics.json');
+
+  console.log('fetching all meetings from Fathom...');
+  const meetings = await listAllMeetings();
+  console.log(`got ${meetings.length} meetings`);
+
+  for (const hub of hubs) {
+    console.log(`--- ${hub.slug} · filter="${hub.fathom_client_filter}" ---`);
+    const hubMeetings = meetings.filter((m) => matchesHub(m, hub.fathom_client_filter));
+    console.log(`  ${hubMeetings.length} meetings match`);
+
+    // Pull transcripts (parallel with some safety)
+    const withTranscripts = await Promise.all(
+      hubMeetings.map(async (m) => ({
+        id: m.id || m.meeting_id,
+        title: m.title || m.meeting_title || m.name || 'Untitled',
+        url: m.share_url || m.url || (m.id ? `https://fathom.video/calls/${m.id}` : null),
+        date: m.scheduled_start_time || m.start_time || m.created_at || null,
+        duration_minutes: m.duration_minutes || (m.duration_seconds ? Math.round(m.duration_seconds / 60) : null),
+        host: m.host_name || m.host?.name || null,
+        transcript: await getTranscript(m.id || m.meeting_id),
+      }))
+    );
+
+    // Status per topic
+    const combined = withTranscripts.map((m) => m.transcript).join('\n\n');
+    const statuses = topics.map((t) => ({
+      id: t.id,
+      text: t.text,
+      status: statusForHits(countHits(combined, t.keywords)),
+      hits: countHits(combined, t.keywords),
+    }));
+
+    await writeJson(`data/${hub.slug}/status.json`, {
+      updated_at: new Date().toISOString(),
+      statuses,
+    });
+
+    // Recordings list (don't leak transcript into committed file)
+    await writeJson(`data/${hub.slug}/recordings.json`, {
+      updated_at: new Date().toISOString(),
+      recordings: withTranscripts
+        .map(({ transcript, ...rest }) => rest)
+        .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0)),
+    });
+  }
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

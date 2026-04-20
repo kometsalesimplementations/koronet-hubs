@@ -1,0 +1,20 @@
+{
+  "$schema": "./hubs.schema.json",
+  "description": "Registro de hubs de Koronet. Agregar entrada por cada nuevo cliente. Las Actions leen esto para saber qué hubs sincronizar.",
+  "hubs": [
+    {
+      "slug": "lartisan",
+      "name": "Lartisan Roses LLC",
+      "pmt_id": "a9PVL000000Jjkb2AC",
+      "fathom_client_filter": "L'artisan",
+      "hub_file": "lartisan-client.html"
+    },
+    {
+      "slug": "florens",
+      "name": "Florens Group LLC",
+      "pmt_id": "a9PVL000000JwbN2AS",
+      "fathom_client_filter": "Florens",
+      "hub_file": "florens-client.html"
+    }
+  ]
+}

@@ -138,16 +138,18 @@ function normalize(raw, phases) {
     phases: (phases || []).map((p) => ({
       id: p.Id,
       name: p.Name,
+      // Use Koronet's custom override first, fallback to PMT standard.
       completion_pct:
-        p.inov8__Percentage_Completion__c ??
-        p.inov8__Completion_Percentage__c ??
+        p.Phase_Completion_Custom__c ??
+        p.inov8__Phase_Completion__c ??
+        p.inov8__Percentage_Completion_without_child__c ??
         null,
-      status:
-        p.inov8__Status__c ??
-        p.inov8__Phase_Status__c ??
-        null,
-      start_date: p.inov8__Start_Date__c ?? null,
-      end_date: p.inov8__End_Date__c ?? p.inov8__Deadline__c ?? null,
+      health: p.inov8__Phase_Health__c ?? null,
+      start_date: p.inov8__Start_Date_Rollup__c ?? p.inov8__Kickoff_formula__c ?? null,
+      end_date: p.inov8__End_Date_Rollup__c ?? p.inov8__Deadline_formula__c ?? null,
+      days_to_go: p.inov8__Days_to_go__c ?? null,
+      task_count: p.inov8__Task_Count__c ?? null,
+      daily_progress: p.inov8__Daily_progress__c ?? null,
       raw: p,
     })),
     raw,

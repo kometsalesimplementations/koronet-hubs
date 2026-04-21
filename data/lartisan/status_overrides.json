@@ -1,0 +1,19 @@
+{
+  "description": "Manual overrides by Valentina. These win over Fathom auto-matching. Edit here when the auto-match misses something. The Fathom sync script does NOT touch this file.",
+  "updated_at": "2026-04-20T22:00:00Z",
+  "updated_by": "Valentina",
+  "overrides": {
+    "1": "done",
+    "2": "done",
+    "3": "done",
+    "4": "done",
+    "5": "done",
+    "6": "done",
+    "7": "done",
+    "8": "done",
+    "9": "done",
+    "10": "done",
+    "11": "done",
+    "12": "done"
+  }
+}

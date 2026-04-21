@@ -448,12 +448,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
   <p class="sl">Session recordings · via Fathom</p>
   <div class="no-data">No recordings yet</div>
 
-  <!-- Koronet University -->
-  <p class="sl">Koronet University</p>
-  <div class="ku">
-    <h3>Komet Core</h3>
-    <div class="ku-sub">Self-paced course · Complete at your own speed between sessions</div>
-    <a href="https://koronet.learnworlds.com/course/komet-wholesale" target="_blank">Open course ↗</a>
+  <!-- Data required from client -->
+  <p class="sl">Data required from client</p>
+  <div class="rc">
+    <div class="rt">Customers</div>
+    <div class="rm">Excel template · pending upload</div>
+  </div>
+  <div class="rc">
+    <div class="rt">Vendors</div>
+    <div class="rm">Excel template · pending upload</div>
+  </div>
+  <div class="rc">
+    <div class="rt">Box dimensions</div>
+    <div class="rm">Excel template · pending upload</div>
+  </div>
+  <div class="rc">
+    <div class="rt">Hardgoods</div>
+    <div class="rm">Excel template · pending upload</div>
+  </div>
+  <div class="rc">
+    <div class="rt">Carriers</div>
+    <div class="rm">Excel template · pending upload</div>
   </div>
 
   <!-- Email templates -->
@@ -471,6 +486,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
       <button class="cb" onclick="copyTemplate(1)">Copy template</button>
     </div>
     <div class="tt">Dear [Client's Name],<br><br>We're excited to share that your online store is now ready! You can now browse our full inventory, place orders, and manage everything from one convenient platform.<br><br>Click below to create your account and start exploring:<br>[eCommerce Link]<br><br>If you need any help getting started, we're here for you.<br><br>Welcome aboard!<br><br>Best regards,<br>[Your Name]<br>[Company Name]</div>
+  </div>
+
+  <!-- Koronet University (moved down — already accessible from Komet Sales) -->
+  <p class="sl">Koronet University</p>
+  <div class="ku">
+    <h3>Komet Core</h3>
+    <div class="ku-sub">Self-paced course · Complete at your own speed between sessions</div>
+    <a href="https://koronet.learnworlds.com/course/komet-wholesale" target="_blank">Open course ↗</a>
   </div>
 </div>
 
@@ -718,11 +741,18 @@ document.querySelectorAll('.wnode').forEach(node => {
     header.insertAdjacentHTML('afterend', html);
   }
   (async () => {
-    const [pmt, status, recs] = await Promise.all([
+    const [pmt, status, recs, overrides] = await Promise.all([
       loadJson(`./data/${HUB}/pmt.json`),
       loadJson(`./data/${HUB}/status.json`),
       loadJson(`./data/${HUB}/recordings.json`),
+      loadJson(`./data/${HUB}/status_overrides.json`),
     ]);
+    if (status && overrides && overrides.overrides) {
+      for (const s of status.statuses) {
+        const ov = overrides.overrides[String(s.id)];
+        if (ov) { s.status = ov; s.hits = 999; }
+      }
+    }
     if (pmt) renderPhases(pmt);
     if (status) renderStatuses(status);
     if (recs) renderRecordings(recs);

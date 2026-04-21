@@ -731,12 +731,30 @@ document.querySelectorAll('.wnode').forEach(node => {
     }).join('');
     header.insertAdjacentHTML('afterend', html);
   }
+  function renderPreGoLive(pgl) {
+    if (!pgl || !pgl.metrics) return;
+    const cards = document.querySelectorAll('#p-pg .pg-card');
+    const m = pgl.metrics;
+    const setCard = (idx, metric) => {
+      if (!cards[idx] || !metric) return;
+      const valEl = cards[idx].querySelector('.pg-val');
+      if (!valEl) return;
+      if (metric.pct != null) valEl.textContent = `${metric.pct}%`;
+      else if (metric.value != null) valEl.textContent = String(metric.value);
+      else valEl.textContent = '—';
+    };
+    setCard(0, m.payment_methods_saved);
+    setCard(1, m.ecommerce_users);
+    setCard(2, m.k2k_connections);
+  }
+
   (async () => {
-    const [pmt, status, recs, overrides] = await Promise.all([
+    const [pmt, status, recs, overrides, pgl] = await Promise.all([
       loadJson(`./data/${HUB}/pmt.json`),
       loadJson(`./data/${HUB}/status.json`),
       loadJson(`./data/${HUB}/recordings.json`),
       loadJson(`./data/${HUB}/status_overrides.json`),
+      loadJson(`./data/${HUB}/pre_go_live.json`),
     ]);
     if (status && overrides && overrides.overrides) {
       for (const s of status.statuses) {
@@ -747,6 +765,7 @@ document.querySelectorAll('.wnode').forEach(node => {
     if (pmt) renderPhases(pmt);
     if (status) renderStatuses(status);
     if (recs) renderRecordings(recs);
+    if (pgl) renderPreGoLive(pgl);
     renderStats(pmt, recs);
   })();
 })();

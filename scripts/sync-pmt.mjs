@@ -41,11 +41,11 @@ function requireEnv(key) {
 }
 
 /**
- * Upfront validation of every required secret. Prints a consolidated list of
- * what's missing so a single run tells you everything you need to fix.
+ * Upfront validation of every required secret. Client Credentials Flow only
+ * needs the app's Consumer Key/Secret — no user password or security token.
  */
 function validateSecrets() {
-  const required = ['SF_CLIENT_ID', 'SF_CLIENT_SECRET', 'SF_USERNAME', 'SF_PASSWORD', 'SF_SECURITY_TOKEN'];
+  const required = ['SF_CLIENT_ID', 'SF_CLIENT_SECRET'];
   const missing = required.filter((k) => !process.env[k]);
   if (missing.length) {
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -55,7 +55,6 @@ function validateSecrets() {
     missing.forEach((k) => console.error(`  · ${k}`));
     console.error('');
     console.error('Fix: https://github.com/kometsalesimplementations/koronet-hubs/settings/secrets/actions');
-    console.error('Click "New repository secret" for each missing name above.');
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     process.exit(1);
   }
@@ -80,22 +79,21 @@ function explainOAuthError(status, bodyText) {
     '',
   ];
   if (code === 'invalid_grant') {
-    lines.push('LIKELY CAUSES (try in this order):');
+    lines.push('LIKELY CAUSES for Client Credentials Flow (try in this order):');
     lines.push('');
-    lines.push('1. Security token is stale. It regenerates every time the password changes.');
-    lines.push('   → Salesforce → Settings → My Personal Information → Reset My Security Token');
-    lines.push('   → Check email for the new token, update secret SF_SECURITY_TOKEN.');
+    lines.push('1. Client Credentials Flow not enabled on the External Client App.');
+    lines.push('   → Setup → App Manager → "Koronet Hubs Automation" → Settings →');
+    lines.push('   → Flow Enablement → check "Enable Client Credentials Flow" → Save');
     lines.push('');
-    lines.push('2. Password is wrong in the secret.');
-    lines.push('   → Try logging in at https://login.salesforce.com with SF_USERNAME + SF_PASSWORD to verify.');
+    lines.push('2. Run As user not configured or inactive.');
+    lines.push('   → Policies → Edit → Enable Client Credentials Flow →');
+    lines.push('   → Run As (Username): valentina.espinel@koronet.com');
     lines.push('');
-    lines.push('3. Connected App restricts IPs and GitHub Actions runner IP is blocked.');
-    lines.push('   → Salesforce Setup → App Manager → "Koronet Hub" → Manage → Edit Policies');
-    lines.push('   → IP Relaxation: "Relax IP restrictions"');
-    lines.push('   → Permitted Users: "All users may self-authorize"');
+    lines.push('3. IP Relaxation is still "Enforce IP restrictions".');
+    lines.push('   → Policies → Edit → IP Relaxation: "Relax IP restrictions"');
     lines.push('');
-    lines.push('4. User profile does not have "API Enabled" permission.');
-    lines.push('   → Ask your Salesforce admin to enable API access for SF_USERNAME.');
+    lines.push('4. App was just created or policies saved recently (< 10 min).');
+    lines.push('   → Wait 10 minutes for Salesforce to propagate and retry.');
   } else if (code === 'invalid_client_id' || code === 'invalid_client') {
     lines.push('The Consumer Key or Secret in SF_CLIENT_ID / SF_CLIENT_SECRET does not match the Connected App.');
     lines.push('→ Salesforce Setup → App Manager → "Koronet Hub" → View → copy the consumer key/secret again.');
@@ -113,13 +111,11 @@ function explainOAuthError(status, bodyText) {
 
 async function authenticate() {
   const loginUrl = process.env.SF_LOGIN_URL || 'https://login.salesforce.com';
-  console.log(`attempting OAuth @ ${loginUrl}/services/oauth2/token ...`);
+  console.log(`attempting Client Credentials OAuth @ ${loginUrl}/services/oauth2/token ...`);
   const body = new URLSearchParams({
-    grant_type: 'password',
+    grant_type: 'client_credentials',
     client_id: requireEnv('SF_CLIENT_ID'),
     client_secret: requireEnv('SF_CLIENT_SECRET'),
-    username: requireEnv('SF_USERNAME'),
-    password: requireEnv('SF_PASSWORD') + requireEnv('SF_SECURITY_TOKEN'),
   });
   const res = await fetch(`${loginUrl}/services/oauth2/token`, {
     method: 'POST',

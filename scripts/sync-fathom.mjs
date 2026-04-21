@@ -188,8 +188,17 @@ async function main() {
 
   for (const hub of hubs) {
     console.log(`--- ${hub.slug} · filter="${hub.fathom_client_filter}" ---`);
-    const hubMeetings = meetings.filter((m) => matchesHub(m, hub.fathom_client_filter));
-    console.log(`  ${hubMeetings.length} meetings match`);
+    // Load per-hub exclude list (recording IDs that should never appear in this hub).
+    let excludedIds = new Set();
+    try {
+      const ex = await readJson(`data/${hub.slug}/recordings_excludes.json`);
+      excludedIds = new Set((ex.excluded_ids || []).map(String));
+      if (excludedIds.size) console.log(`  ${excludedIds.size} excluded ID(s) for this hub`);
+    } catch { /* no excludes file is fine */ }
+    const hubMeetings = meetings
+      .filter((m) => matchesHub(m, hub.fathom_client_filter))
+      .filter((m) => !excludedIds.has(String(m.recording_id || m.id)));
+    console.log(`  ${hubMeetings.length} meetings match (after excludes)`);
 
     // If the listing returned transcript=null, try fetching each meeting by
     // id to get the full record. Fathom's single-meeting endpoint tends to

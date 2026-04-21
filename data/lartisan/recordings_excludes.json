@@ -1,0 +1,4 @@
+{
+  "description": "Recording IDs to exclude from this hub. Used to filter out internal Koronet calls or cross-client mismatches.",
+  "excluded_ids": []
+}

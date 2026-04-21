@@ -1,0 +1,4 @@
+{
+  "description": "Recording IDs to exclude from this hub. Used to filter out internal Koronet calls or cross-client mismatches that the broad text filter accidentally caught. The Fathom sync respects this list and the bootstrap also filters as defense-in-depth.",
+  "excluded_ids": [137552634]
+}

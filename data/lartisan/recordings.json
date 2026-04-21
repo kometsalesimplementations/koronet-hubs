@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-04-21T21:13:46.388Z",
+  "updated_at": "2026-04-21T22:00:00.000Z",
   "recordings": [
+    {
+      "id": 645983066,
+      "title": "L'artisan | Implementation — K2K, Standing Orders & Payments",
+      "url": "https://fathom.video/calls/645983066",
+      "date": "2026-04-21T16:00:00Z",
+      "duration_minutes": 55,
+      "host": "Manuel Szajowicz"
+    },
     {
       "id": 139479137,
       "title": "L'artisan | Implementation",

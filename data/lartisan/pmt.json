@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-21T01:09:27.909Z",
+  "fetched_at": "2026-04-21T01:12:17.925Z",
   "id": "a9PVL000000Jjkb2AC",
   "name": "Komet Core Importer/Grower Lartisan Roses LLC",
   "overall": {
@@ -24,10 +24,13 @@
     {
       "id": "a9NVL0000000gVV2AY",
       "name": "Sales Handover",
-      "completion_pct": null,
-      "status": null,
-      "start_date": null,
-      "end_date": null,
+      "completion_pct": 63,
+      "health": "On Track",
+      "start_date": "2026-04-13",
+      "end_date": "2026-04-13",
+      "days_to_go": -7,
+      "task_count": 8,
+      "daily_progress": null,
       "raw": {
         "attributes": {
           "type": "inov8__PMT_Phase__c",
@@ -78,10 +81,13 @@
     {
       "id": "a9NVL0000000gVW2AY",
       "name": "Account Configuration",
-      "completion_pct": null,
-      "status": null,
-      "start_date": null,
-      "end_date": null,
+      "completion_pct": 67,
+      "health": "On Track",
+      "start_date": "2026-04-13",
+      "end_date": "2026-04-15",
+      "days_to_go": -5,
+      "task_count": 6,
+      "daily_progress": "50 %",
       "raw": {
         "attributes": {
           "type": "inov8__PMT_Phase__c",
@@ -132,10 +138,13 @@
     {
       "id": "a9NVL0000000gVX2AY",
       "name": "Kickoff",
-      "completion_pct": null,
-      "status": null,
-      "start_date": null,
-      "end_date": null,
+      "completion_pct": 60,
+      "health": "On Track",
+      "start_date": "2026-04-15",
+      "end_date": "2026-04-15",
+      "days_to_go": -5,
+      "task_count": 5,
+      "daily_progress": null,
       "raw": {
         "attributes": {
           "type": "inov8__PMT_Phase__c",
@@ -186,10 +195,13 @@
     {
       "id": "a9NVL0000000gVY2AY",
       "name": "Training",
-      "completion_pct": null,
-      "status": null,
-      "start_date": null,
-      "end_date": null,
+      "completion_pct": 26,
+      "health": "On Track",
+      "start_date": "2026-04-16",
+      "end_date": "2026-05-26",
+      "days_to_go": 36,
+      "task_count": 54,
+      "daily_progress": "2.5 %",
       "raw": {
         "attributes": {
           "type": "inov8__PMT_Phase__c",
@@ -240,10 +252,13 @@
     {
       "id": "a9NVL0000000gVZ2AY",
       "name": "Pre Go Live Checks",
-      "completion_pct": null,
-      "status": null,
-      "start_date": null,
-      "end_date": null,
+      "completion_pct": 0,
+      "health": "On Track",
+      "start_date": "2026-05-20",
+      "end_date": "2026-05-26",
+      "days_to_go": 36,
+      "task_count": 5,
+      "daily_progress": "16.66666666666666666666666666666666666667 %",
       "raw": {
         "attributes": {
           "type": "inov8__PMT_Phase__c",
@@ -294,10 +309,13 @@
     {
       "id": "a9NVL0000000gVa2AI",
       "name": "Post Go Live",
-      "completion_pct": null,
-      "status": null,
-      "start_date": null,
-      "end_date": null,
+      "completion_pct": 0,
+      "health": "On Track",
+      "start_date": "2026-05-27",
+      "end_date": "2026-06-26",
+      "days_to_go": 67,
+      "task_count": 3,
+      "daily_progress": "3.33333333333333333333333333333333333333 %",
       "raw": {
         "attributes": {
           "type": "inov8__PMT_Phase__c",

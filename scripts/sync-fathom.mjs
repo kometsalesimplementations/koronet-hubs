@@ -98,7 +98,11 @@ async function listAllMeetings() {
   let pages = 0;
   const MAX_PAGES = 20;
   do {
-    const params = cursor ? { cursor } : {};
+    // include_transcript=true asks Fathom to populate the transcript field
+    // inline in the listing response rather than returning null.
+    const params = cursor
+      ? { cursor, include_transcript: 'true' }
+      : { include_transcript: 'true' };
     const page = await fathomGet('/meetings', params);
     const items = page.items || page.data || [];
     out.push(...items);
@@ -187,22 +191,34 @@ async function main() {
     const hubMeetings = meetings.filter((m) => matchesHub(m, hub.fathom_client_filter));
     console.log(`  ${hubMeetings.length} meetings match`);
 
-    const withTranscripts = hubMeetings.map((m) => {
-      const transcript = extractText(m);
-      const durMins = m.recording_start_time && m.recording_end_time
-        ? Math.round((new Date(m.recording_end_time) - new Date(m.recording_start_time)) / 60000)
+    // If the listing returned transcript=null, try fetching each meeting by
+    // id to get the full record. Fathom's single-meeting endpoint tends to
+    // include the transcript even when the list doesn't.
+    const withTranscripts = [];
+    for (const m of hubMeetings) {
+      let full = m;
+      if (!m.transcript && m.recording_id) {
+        try {
+          full = await fathomGet(`/meetings/${m.recording_id}`);
+        } catch {
+          // fall back to listing row
+        }
+      }
+      const transcript = extractText(full);
+      const durMins = full.recording_start_time && full.recording_end_time
+        ? Math.round((new Date(full.recording_end_time) - new Date(full.recording_start_time)) / 60000)
         : null;
-      console.log(`  "${m.title}" — transcript ${transcript.length} chars`);
-      return {
-        id: m.recording_id || null,
-        title: m.title || m.meeting_title || 'Untitled',
-        url: m.share_url || m.url || null,
-        date: m.scheduled_start_time || m.recording_start_time || m.created_at || null,
+      console.log(`  "${full.title}" — transcript ${transcript.length} chars`);
+      withTranscripts.push({
+        id: full.recording_id || null,
+        title: full.title || full.meeting_title || 'Untitled',
+        url: full.share_url || full.url || null,
+        date: full.scheduled_start_time || full.recording_start_time || full.created_at || null,
         duration_minutes: durMins,
-        host: m.recorded_by?.name || m.recorded_by?.email || null,
+        host: full.recorded_by?.name || full.recorded_by?.email || null,
         transcript,
-      };
-    });
+      });
+    }
 
     // Status per topic
     const combined = withTranscripts.map((m) => m.transcript).join('\n\n');

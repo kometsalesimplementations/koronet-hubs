@@ -1,13 +1,13 @@
 {
-  "updated_at": "2026-04-21T01:29:27.631Z",
+  "updated_at": "2026-04-21T01:37:29.036Z",
   "recordings": [
     {
       "id": 137552634,
       "title": "KPayments | Florens Group | Komet Sales",
       "url": "https://fathom.video/share/6Cpho9qQPnLEcx_djdtjumP_6BkxwUzM",
       "date": "2026-04-13T18:00:00Z",
-      "duration_minutes": null,
-      "host": null
+      "duration_minutes": 1,
+      "host": "Christian Medina"
     }
   ]
 }

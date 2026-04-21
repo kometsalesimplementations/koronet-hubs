@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T03:04:37.561Z",
+  "updated_at": "2026-04-21T21:13:46.401Z",
   "statuses": [
     {
       "id": 1,
@@ -10,8 +10,8 @@
     {
       "id": 2,
       "text": "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 3,
@@ -40,8 +40,8 @@
     {
       "id": 7,
       "text": "Grower Portal / Grower Menu: Add products to an AWB and print labels",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 8,
@@ -64,8 +64,8 @@
     {
       "id": 11,
       "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 12,
@@ -130,8 +130,8 @@
     {
       "id": 22,
       "text": "Payouts and settlement report",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 23,
@@ -232,8 +232,8 @@
     {
       "id": 39,
       "text": "Reports overview",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 40,

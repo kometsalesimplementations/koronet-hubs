@@ -120,20 +120,50 @@ async function listAllMeetings() {
   return out;
 }
 
-async function getTranscript(meetingId) {
-  try {
-    const data = await fathomGet(`/meetings/${meetingId}/transcript`);
-    // Transcript shape varies — fall back to whatever text we can find.
-    if (typeof data === 'string') return data;
-    if (Array.isArray(data)) return data.map((t) => t.text || t.utterance || '').join('\n');
-    if (data.transcript) return data.transcript;
-    if (data.text) return data.text;
-    if (Array.isArray(data.segments)) return data.segments.map((s) => s.text || '').join('\n');
-    return JSON.stringify(data);
-  } catch (err) {
-    console.warn(`  no transcript for ${meetingId}: ${err.message}`);
-    return '';
+function extractShareId(url) {
+  if (!url) return null;
+  const m = url.match(/\/share\/([^/?#]+)/) || url.match(/\/calls\/([^/?#]+)/);
+  return m ? m[1] : null;
+}
+
+async function getTranscript(meeting) {
+  // Fathom API returns different identifier fields across versions. Try each
+  // candidate until one of the transcript endpoints responds.
+  const candidates = [
+    meeting.id,
+    meeting.meeting_id,
+    meeting.call_id,
+    meeting.recording_id,
+    extractShareId(meeting.share_url || meeting.url),
+  ].filter(Boolean);
+
+  const endpoints = [
+    (id) => `/meetings/${id}/transcript`,
+    (id) => `/calls/${id}/transcript`,
+    (id) => `/recordings/${id}/transcript`,
+    (id) => `/transcripts/${id}`,
+  ];
+
+  for (const id of candidates) {
+    for (const ep of endpoints) {
+      try {
+        const data = await fathomGet(ep(id));
+        if (typeof data === 'string' && data.length) return data;
+        if (Array.isArray(data)) return data.map((t) => t.text || t.utterance || '').join('\n');
+        if (data.transcript) return data.transcript;
+        if (data.text) return data.text;
+        if (Array.isArray(data.segments)) return data.segments.map((s) => s.text || '').join('\n');
+        if (Array.isArray(data.utterances)) return data.utterances.map((u) => u.text || '').join('\n');
+        // Unknown shape — log once for debugging but don't fail.
+        console.log(`  transcript shape: ${JSON.stringify(data).slice(0, 200)}`);
+        return JSON.stringify(data);
+      } catch (err) {
+        // Try next combination.
+      }
+    }
   }
+  console.warn(`  no transcript found for "${meeting.title}" (tried ${candidates.length} ids × ${endpoints.length} endpoints)`);
+  return '';
 }
 
 function matchesHub(meeting, filter) {
@@ -182,18 +212,26 @@ async function main() {
     const hubMeetings = meetings.filter((m) => matchesHub(m, hub.fathom_client_filter));
     console.log(`  ${hubMeetings.length} meetings match`);
 
-    // Pull transcripts (parallel with some safety)
-    const withTranscripts = await Promise.all(
-      hubMeetings.map(async (m) => ({
-        id: m.id || m.meeting_id,
+    // Log first meeting shape once to help diagnose field names.
+    if (hubMeetings[0]) {
+      console.log(`  first meeting raw keys: ${Object.keys(hubMeetings[0]).join(', ')}`);
+    }
+
+    // Pull transcripts sequentially to respect rate limits.
+    const withTranscripts = [];
+    for (const m of hubMeetings) {
+      const transcript = await getTranscript(m);
+      withTranscripts.push({
+        id: m.id || m.meeting_id || m.call_id || m.recording_id || null,
         title: m.title || m.meeting_title || m.name || 'Untitled',
         url: m.share_url || m.url || (m.id ? `https://fathom.video/calls/${m.id}` : null),
         date: m.scheduled_start_time || m.start_time || m.created_at || null,
         duration_minutes: m.duration_minutes || (m.duration_seconds ? Math.round(m.duration_seconds / 60) : null),
         host: m.host_name || m.host?.name || null,
-        transcript: await getTranscript(m.id || m.meeting_id),
-      }))
-    );
+        transcript,
+      });
+      console.log(`  "${m.title || m.name}" — transcript ${transcript.length > 0 ? `${transcript.length} chars` : 'empty'}`);
+    }
 
     // Status per topic
     const combined = withTranscripts.map((m) => m.transcript).join('\n\n');

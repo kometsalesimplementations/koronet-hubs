@@ -1,6 +1,6 @@
 {
-  "fetched_at": "2026-04-21T15:00:00Z",
-  "source": "Snowflake · PRODUCTION.ANALYTICS.CUSTOMERS + PRODUCTION.ANALYTICS.KORONET_PAYMENTS",
+  "fetched_at": "2026-04-21T15:15:00Z",
+  "source": "Snowflake · PRODUCTION.ANALYTICS (CUSTOMERS, KORONET_PAYMENTS, K2K_CONNECTIONS, USER_STATS)",
   "metrics": {
     "payment_methods_saved": {
       "numerator": 0,
@@ -10,12 +10,12 @@
       "label": "of active customers"
     },
     "ecommerce_users": {
-      "value": null,
+      "value": 0,
       "target": 10,
       "label": "created before go live"
     },
     "k2k_connections": {
-      "value": null,
+      "value": 1,
       "target": 5,
       "label": "active connections"
     }

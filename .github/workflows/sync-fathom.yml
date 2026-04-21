@@ -2,8 +2,8 @@ name: Sync Fathom transcripts and statuses
 
 on:
   schedule:
-    # Cada 2 horas (Fathom cambia más seguido que PMT)
-    - cron: '0 */2 * * *'
+    # Diario a las 12:05 UTC (5 min despu\u00e9s del PMT sync)
+    - cron: '5 12 * * *'
   workflow_dispatch:
   push:
     paths:

@@ -2,8 +2,8 @@ name: Sync PMT from Salesforce
 
 on:
   schedule:
-    # Cada 3 horas
-    - cron: '0 */3 * * *'
+    # Diario a las 12:00 UTC (~7am Bogot\u00e1)
+    - cron: '0 12 * * *'
   workflow_dispatch:
   push:
     paths:

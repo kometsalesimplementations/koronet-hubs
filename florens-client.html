@@ -656,5 +656,66 @@ document.querySelectorAll('.wnode').forEach(node => {
   });
 });
 </script>
+
+<!-- Live data bootstrap — see lartisan-client.html for full comments -->
+<script>
+(function () {
+  const HUB = 'florens';
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  async function loadJson(path) {
+    try { const r = await fetch(path, {cache: 'no-store'}); return r.ok ? r.json() : null; }
+    catch { return null; }
+  }
+  function renderPhases(pmt) {
+    const el = document.querySelector('.phases');
+    if (!el || !Array.isArray(pmt.phases)) return;
+    el.innerHTML = pmt.phases.map((p) => `
+      <div class="ph">
+        <span class="ph-name">${esc(p.name || p.label)}</span>
+        <div class="ph-bar"><div class="ph-fill" style="width:${p.completion_pct ?? p.pct ?? 0}%"></div></div>
+        <span class="ph-pct">${p.completion_pct ?? p.pct ?? 0}%</span>
+      </div>
+    `).join('');
+  }
+  function renderStatuses(st) {
+    const firstTk = document.querySelector('.tk');
+    if (!firstTk || !Array.isArray(st.statuses)) return;
+    const container = firstTk.parentElement;
+    container.innerHTML = st.statuses.map((t) => {
+      const cls = t.status === 'done' ? 'sp-done' : t.status === 'partial' ? 'sp-partial' : 'sp-not';
+      const label = t.status === 'done' ? '✓ Done' : t.status === 'partial' ? '~ Partial' : 'Not started';
+      return `<div class="tk"><span class="tk-n">${esc(t.text)}</span><span class="sp ${cls}">${label}</span></div>`;
+    }).join('');
+  }
+  function renderRecordings(r) {
+    const header = Array.from(document.querySelectorAll('.sl')).find((el) => /Session recordings/i.test(el.textContent));
+    if (!header || !Array.isArray(r.recordings)) return;
+    let next = header.nextElementSibling;
+    while (next && next.classList.contains('rc')) {
+      const rm = next; next = next.nextElementSibling; rm.remove();
+    }
+    const html = r.recordings.map((rec) => {
+      const dt = rec.date ? new Date(rec.date) : null;
+      const dateStr = dt && !isNaN(dt) ? dt.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : '';
+      const dur = rec.duration_minutes ? `${rec.duration_minutes} mins` : '';
+      const host = rec.host ? esc(rec.host) : '';
+      const meta = [dateStr, dur, host].filter(Boolean).join(' · ');
+      return `<div class="rc"><div class="rt">${esc(rec.title)}</div><div class="rm">${meta}</div><a href="${esc(rec.url)}" target="_blank">Ver grabación ↗</a></div>`;
+    }).join('');
+    header.insertAdjacentHTML('afterend', html);
+  }
+  (async () => {
+    const [pmt, status, recs] = await Promise.all([
+      loadJson(`./data/${HUB}/pmt.json`),
+      loadJson(`./data/${HUB}/status.json`),
+      loadJson(`./data/${HUB}/recordings.json`),
+    ]);
+    if (pmt) renderPhases(pmt);
+    if (status) renderStatuses(status);
+    if (recs) renderRecordings(recs);
+  })();
+})();
+</script>
+
 </body>
 </html>

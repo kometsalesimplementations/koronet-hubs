@@ -703,6 +703,38 @@ document.querySelectorAll('.wnode').forEach(node => {
     `).join('');
   }
 
+  function fmtDate(iso) {
+    if (!iso) return null;
+    const d = new Date(iso);
+    if (isNaN(d)) return null;
+    return { short: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), year: String(d.getFullYear()) };
+  }
+
+  function updateStat(label, val, sub) {
+    const stat = Array.from(document.querySelectorAll('.stat')).find((s) =>
+      s.querySelector('.label')?.textContent.trim() === label
+    );
+    if (!stat) return;
+    if (val != null) { const v = stat.querySelector('.val'); if (v) v.textContent = val; }
+    if (sub != null) { const s = stat.querySelector('.sub'); if (s) s.textContent = sub; }
+  }
+
+  function renderStats(pmt, recs) {
+    if (pmt) {
+      const start = fmtDate(pmt.dates?.start);
+      if (start) updateStat('Contract start', start.short, start.year);
+      const ko = fmtDate(pmt.dates?.kickoff);
+      if (ko) updateStat('Kickoff', ko.short, ko.year);
+      const gl = fmtDate(pmt.dates?.estimated_go_live);
+      if (gl) updateStat('Est. go live', gl.short, gl.year);
+      const pct = pmt.overall?.completion_pct;
+      if (pct != null) updateStat('Completion', `${pct}%`);
+    }
+    if (recs && Array.isArray(recs.recordings)) {
+      updateStat('Recordings', String(recs.recordings.length), 'via Fathom');
+    }
+  }
+
   function renderStatuses(st) {
     const firstTk = document.querySelector('.tk');
     if (!firstTk || !Array.isArray(st.statuses)) return;
@@ -741,6 +773,7 @@ document.querySelectorAll('.wnode').forEach(node => {
     if (pmt) renderPhases(pmt);
     if (status) renderStatuses(status);
     if (recs) renderRecordings(recs);
+    renderStats(pmt, recs);
   })();
 })();
 </script>

@@ -680,6 +680,11 @@ document.querySelectorAll('.wnode').forEach(node => {
       if (gl) updateStat('Est. go live', gl.short, gl.year);
       const pct = pmt.overall?.completion_pct;
       if (pct != null) updateStat('Completion', `${pct}%`);
+      const status = pmt.overall?.status;
+      if (status) {
+        const badge = document.querySelector('.badge');
+        if (badge) badge.textContent = status;
+      }
     }
     if (recs && Array.isArray(recs.recordings)) {
       updateStat('Recordings', String(recs.recordings.length), 'via Fathom');

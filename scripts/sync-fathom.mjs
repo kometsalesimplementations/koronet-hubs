@@ -120,50 +120,25 @@ async function listAllMeetings() {
   return out;
 }
 
-function extractShareId(url) {
-  if (!url) return null;
-  const m = url.match(/\/share\/([^/?#]+)/) || url.match(/\/calls\/([^/?#]+)/);
-  return m ? m[1] : null;
-}
-
-async function getTranscript(meeting) {
-  // Fathom API returns different identifier fields across versions. Try each
-  // candidate until one of the transcript endpoints responds.
-  const candidates = [
-    meeting.id,
-    meeting.meeting_id,
-    meeting.call_id,
-    meeting.recording_id,
-    extractShareId(meeting.share_url || meeting.url),
-  ].filter(Boolean);
-
-  const endpoints = [
-    (id) => `/meetings/${id}/transcript`,
-    (id) => `/calls/${id}/transcript`,
-    (id) => `/recordings/${id}/transcript`,
-    (id) => `/transcripts/${id}`,
-  ];
-
-  for (const id of candidates) {
-    for (const ep of endpoints) {
-      try {
-        const data = await fathomGet(ep(id));
-        if (typeof data === 'string' && data.length) return data;
-        if (Array.isArray(data)) return data.map((t) => t.text || t.utterance || '').join('\n');
-        if (data.transcript) return data.transcript;
-        if (data.text) return data.text;
-        if (Array.isArray(data.segments)) return data.segments.map((s) => s.text || '').join('\n');
-        if (Array.isArray(data.utterances)) return data.utterances.map((u) => u.text || '').join('\n');
-        // Unknown shape — log once for debugging but don't fail.
-        console.log(`  transcript shape: ${JSON.stringify(data).slice(0, 200)}`);
-        return JSON.stringify(data);
-      } catch (err) {
-        // Try next combination.
-      }
-    }
+/**
+ * Fathom returns the transcript inline on the /meetings listing response
+ * (field: `transcript`). No second API call needed. Also falls back to
+ * default_summary + action_items if the transcript is missing so the
+ * keyword matcher still has text to work with.
+ */
+function extractText(meeting) {
+  const parts = [];
+  if (typeof meeting.transcript === 'string') parts.push(meeting.transcript);
+  else if (Array.isArray(meeting.transcript)) {
+    parts.push(meeting.transcript.map((t) => t.text || t.utterance || '').join('\n'));
+  } else if (meeting.transcript && typeof meeting.transcript === 'object') {
+    parts.push(JSON.stringify(meeting.transcript));
   }
-  console.warn(`  no transcript found for "${meeting.title}" (tried ${candidates.length} ids × ${endpoints.length} endpoints)`);
-  return '';
+  if (meeting.default_summary) parts.push(String(meeting.default_summary));
+  if (Array.isArray(meeting.action_items)) {
+    parts.push(meeting.action_items.map((a) => a.text || a.description || '').join('\n'));
+  }
+  return parts.filter(Boolean).join('\n\n');
 }
 
 function matchesHub(meeting, filter) {
@@ -212,26 +187,22 @@ async function main() {
     const hubMeetings = meetings.filter((m) => matchesHub(m, hub.fathom_client_filter));
     console.log(`  ${hubMeetings.length} meetings match`);
 
-    // Log first meeting shape once to help diagnose field names.
-    if (hubMeetings[0]) {
-      console.log(`  first meeting raw keys: ${Object.keys(hubMeetings[0]).join(', ')}`);
-    }
-
-    // Pull transcripts sequentially to respect rate limits.
-    const withTranscripts = [];
-    for (const m of hubMeetings) {
-      const transcript = await getTranscript(m);
-      withTranscripts.push({
-        id: m.id || m.meeting_id || m.call_id || m.recording_id || null,
-        title: m.title || m.meeting_title || m.name || 'Untitled',
-        url: m.share_url || m.url || (m.id ? `https://fathom.video/calls/${m.id}` : null),
-        date: m.scheduled_start_time || m.start_time || m.created_at || null,
-        duration_minutes: m.duration_minutes || (m.duration_seconds ? Math.round(m.duration_seconds / 60) : null),
-        host: m.host_name || m.host?.name || null,
+    const withTranscripts = hubMeetings.map((m) => {
+      const transcript = extractText(m);
+      const durMins = m.recording_start_time && m.recording_end_time
+        ? Math.round((new Date(m.recording_end_time) - new Date(m.recording_start_time)) / 60000)
+        : null;
+      console.log(`  "${m.title}" — transcript ${transcript.length} chars`);
+      return {
+        id: m.recording_id || null,
+        title: m.title || m.meeting_title || 'Untitled',
+        url: m.share_url || m.url || null,
+        date: m.scheduled_start_time || m.recording_start_time || m.created_at || null,
+        duration_minutes: durMins,
+        host: m.recorded_by?.name || m.recorded_by?.email || null,
         transcript,
-      });
-      console.log(`  "${m.title || m.name}" — transcript ${transcript.length > 0 ? `${transcript.length} chars` : 'empty'}`);
-    }
+      };
+    });
 
     // Status per topic
     const combined = withTranscripts.map((m) => m.transcript).join('\n\n');

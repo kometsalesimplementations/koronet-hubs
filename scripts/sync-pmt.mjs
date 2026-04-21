@@ -2,20 +2,10 @@
 /**
  * Koronet Hubs — Salesforce PMT sync (Salesforce CLI edition)
  *
- * Uses `sf` (Salesforce CLI) to authenticate and query PMT records.
- * This sidesteps REST API permission issues that blocked the Connected App path.
+ * Queries the Inov8 PMT project + its child phases and writes a normalized
+ * JSON per hub for the static hub pages to fetch.
  *
- * Credentials (GitHub Secrets):
- *   SF_AUTH_URL   — the `sfdxAuthUrl` Valentina pulled locally via:
- *                   sf org login web
- *                   sf org display --target-org <user> --verbose --json
- *                   → copy the "sfdxAuthUrl": "force://..." value.
- *
- * Flow:
- *   1. Write SF_AUTH_URL to a temp file.
- *   2. `sf org login sfdx-url --sfdx-url-file <tmp>` — authenticates the CLI.
- *   3. `sf data query --query "SELECT ... FROM inov8__PMT_Project__c WHERE Id='...'" --json`
- *      per hub, parse the result, write data/{slug}/pmt.json.
+ * Credentials: SF_AUTH_URL (sfdxAuthUrl value from `sf org display --json`).
  */
 
 import { execSync } from 'node:child_process';
@@ -48,14 +38,10 @@ function validateSecrets() {
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.error('MISSING GITHUB SECRET: SF_AUTH_URL');
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.error('Get it locally (once) with:');
+    console.error('Get it locally with:');
     console.error('  sf org login web');
-    console.error('  sf org list  (note your username)');
     console.error('  sf org display --target-org <username> --verbose --json');
-    console.error('Then copy the "sfdxAuthUrl" value (starts with "force://...").');
-    console.error('Add it at:');
-    console.error('  https://github.com/kometsalesimplementations/koronet-hubs/settings/secrets/actions');
-    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.error('Copy the "sfdxAuthUrl" value (starts with "force://...").');
     process.exit(1);
   }
   console.log(`SF_AUTH_URL: set (${process.env.SF_AUTH_URL.length} chars)`);
@@ -70,57 +56,100 @@ async function authenticateCli() {
       { encoding: 'utf8' }
     );
     const parsed = JSON.parse(out);
-    if (parsed.status !== 0) {
-      throw new Error(`sf login failed: ${parsed.message || out}`);
-    }
+    if (parsed.status !== 0) throw new Error(`sf login failed: ${parsed.message || out}`);
     console.log(`sf CLI authenticated · org alias "${ORG_ALIAS}"`);
   } finally {
-    // Always remove the temp file with the auth URL.
     try { await fs.unlink(tmpFile); } catch { /* ignore */ }
   }
 }
 
-function runSoqlQuery(soql) {
-  const out = execSync(
-    `sf data query --query "${soql.replace(/"/g, '\\"')}" --target-org ${ORG_ALIAS} --json`,
-    { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 }
-  );
-  const parsed = JSON.parse(out);
-  if (parsed.status !== 0) {
-    throw new Error(`sf query failed: ${parsed.message || out}`);
+function runSoql(soql) {
+  try {
+    const out = execSync(
+      `sf data query --query "${soql.replace(/"/g, '\\"')}" --target-org ${ORG_ALIAS} --json`,
+      { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 }
+    );
+    const parsed = JSON.parse(out);
+    if (parsed.status !== 0) throw new Error(`sf query failed: ${parsed.message || out}`);
+    return parsed.result;
+  } catch (err) {
+    // Capture CLI stderr which often contains the real Salesforce error.
+    const msg = err.stdout?.toString() || err.stderr?.toString() || err.message;
+    throw new Error(msg);
   }
-  return parsed.result;
 }
 
 /**
- * Normalize raw PMT record into the shape the hub consumes.
- * Field names are assumed — if a field doesn't exist in the org, it comes back
- * missing and we leave it null. The `raw` block is kept for debugging and for
- * discovering the real field names on the first run.
+ * Try a list of child-object names (Inov8 PMT has rebranded over versions).
+ * Returns the first one that responds, or null if none exist.
  */
-function normalize(raw) {
+function findPhaseObject(projectId) {
+  const candidates = [
+    'inov8__Project_Phase__c',
+    'inov8__Phase__c',
+    'inov8__PMT_Project_Phase__c',
+    'inov8__PMT_Phase__c',
+  ];
+  for (const obj of candidates) {
+    try {
+      const result = runSoql(
+        `SELECT FIELDS(ALL) FROM ${obj} WHERE inov8__Project__c = '${projectId}' LIMIT 200`
+      );
+      if (result?.records) {
+        console.log(`  phase object found: ${obj} (${result.records.length} phases)`);
+        return { obj, records: result.records };
+      }
+    } catch (err) {
+      // Try next candidate. Typical error = object doesn't exist or no permission.
+    }
+  }
+  console.warn('  no phase child object matched — phases will be empty');
+  return { obj: null, records: [] };
+}
+
+/**
+ * Normalize raw PMT record. Field names below match what actually exists in
+ * the Koronet org (discovered from live data on 2026-04-20).
+ */
+function normalize(raw, phases) {
   if (!raw) return null;
-  const pct = (v) => (typeof v === 'number' ? Math.round(v) : null);
   return {
     fetched_at: new Date().toISOString(),
     id: raw.Id,
     name: raw.Name,
-    phases: [
-      { key: 'sales_handover', label: 'Sales Handover', pct: pct(raw.inov8__Sales_Handover_Progress__c) },
-      { key: 'account_config', label: 'Account Configuration', pct: pct(raw.inov8__Account_Configuration_Progress__c) },
-      { key: 'kickoff', label: 'Kickoff', pct: pct(raw.inov8__Kickoff_Progress__c) },
-      { key: 'training', label: 'Training', pct: pct(raw.inov8__Training_Progress__c) },
-      { key: 'pre_go_live', label: 'Pre Go Live', pct: pct(raw.inov8__Pre_Go_Live_Progress__c) },
-      { key: 'post_go_live', label: 'Post Go Live', pct: pct(raw.inov8__Post_Go_Live_Progress__c) },
-    ],
-    targets: {
-      go_live_date: raw.inov8__Target_Go_Live_Date__c || raw.inov8__Go_Live_Date__c || null,
-      status: raw.inov8__Status__c || null,
+    overall: {
+      completion_pct: raw.inov8__Percentage_Completion__c ?? null,
+      status: raw.inov8__Project_Status__c ?? null,
+      health: raw.inov8__Project_Health__c ?? null,
+      level_of_effort: raw.inov8__Level_of_Effort__c ?? null,
+      health_comment: raw.inov8__Health_Comment__c ?? null,
+    },
+    dates: {
+      start: raw.inov8__Start_Date_Rollup__c ?? null,
+      kickoff: raw.Kickoff_Date__c ?? raw.inov8__Kickoff_formula__c ?? null,
+      deadline: raw.inov8__Deadline__c ?? null,
+      estimated_go_live: raw.Estimated_Go_Live_Date__c ?? null,
+      days_to_go_live: raw.Days_to_Estimated_Go_Live__c ?? raw.inov8__Days_to_go__c ?? null,
     },
     team: {
-      implementer: raw.inov8__Implementer__c || raw.inov8__Implementation_Consultant__c || null,
-      sales_rep: raw.inov8__Sales_Rep__c || raw.OwnerId || null,
+      project_lead: raw.inov8__Project_Lead__c ?? null,
+      project_owner: raw.inov8__Project_Owner__c ?? null,
     },
+    phases: (phases || []).map((p) => ({
+      id: p.Id,
+      name: p.Name,
+      completion_pct:
+        p.inov8__Percentage_Completion__c ??
+        p.inov8__Completion_Percentage__c ??
+        null,
+      status:
+        p.inov8__Status__c ??
+        p.inov8__Phase_Status__c ??
+        null,
+      start_date: p.inov8__Start_Date__c ?? null,
+      end_date: p.inov8__End_Date__c ?? p.inov8__Deadline__c ?? null,
+      raw: p,
+    })),
     raw,
   };
 }
@@ -134,20 +163,19 @@ async function main() {
   for (const hub of hubs) {
     try {
       console.log(`--- ${hub.slug} (${hub.pmt_id}) ---`);
-      // Use FIELDS(ALL) to grab every standard and custom field at once.
-      // LIMIT 200 is required when using FIELDS(ALL).
-      const soql = `SELECT FIELDS(ALL) FROM inov8__PMT_Project__c WHERE Id = '${hub.pmt_id}' LIMIT 200`;
-      const result = runSoqlQuery(soql);
-      const record = result?.records?.[0];
-      if (!record) {
-        console.warn(`  no PMT record returned for Id=${hub.pmt_id}`);
+      const projectResult = runSoql(
+        `SELECT FIELDS(ALL) FROM inov8__PMT_Project__c WHERE Id = '${hub.pmt_id}' LIMIT 200`
+      );
+      const project = projectResult?.records?.[0];
+      if (!project) {
+        console.warn(`  no PMT record for Id=${hub.pmt_id}`);
         continue;
       }
-      const normalized = normalize(record);
+      const { records: phases } = findPhaseObject(hub.pmt_id);
+      const normalized = normalize(project, phases);
       await writeJson(`data/${hub.slug}/pmt.json`, normalized);
     } catch (err) {
       console.error(`ERROR syncing ${hub.slug}: ${err.message}`);
-      // Keep going so one bad record does not break the whole run.
     }
   }
 }

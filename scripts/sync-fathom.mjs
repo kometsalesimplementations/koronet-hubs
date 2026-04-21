@@ -53,12 +53,24 @@ function validateSecrets() {
   console.log(`FATHOM_API_KEY: set (${process.env.FATHOM_API_KEY.length} chars)`);
 }
 
-async function fathomGet(pathname, params = {}) {
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function fathomGet(pathname, params = {}, attempt = 1) {
   const url = new URL(FATHOM_BASE + pathname);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
   const res = await fetch(url, {
     headers: { 'X-Api-Key': requireEnv('FATHOM_API_KEY') },
   });
+  if (res.status === 429) {
+    // Respect Retry-After header; fall back to exponential backoff.
+    const retryAfter = Number(res.headers.get('retry-after')) || Math.min(60, 2 ** attempt);
+    if (attempt > 5) {
+      throw new Error(`GET ${url} → 429 (rate limited, gave up after ${attempt} retries)`);
+    }
+    console.log(`  rate limited · sleeping ${retryAfter}s and retrying (attempt ${attempt + 1})`);
+    await sleep(retryAfter * 1000);
+    return fathomGet(pathname, params, attempt + 1);
+  }
   if (!res.ok) {
     const body = await res.text();
     if (res.status === 401 || res.status === 403) {
@@ -66,10 +78,9 @@ async function fathomGet(pathname, params = {}) {
       console.error(`FATHOM AUTH FAILED — HTTP ${res.status}`);
       console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       console.error('FATHOM_API_KEY is invalid or has been revoked.');
-      console.error('Fix: generate a new key in Fathom (Settings → API) and update the secret.');
       console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     } else if (res.status === 404) {
-      console.error(`Fathom returned 404 for ${pathname}. Endpoint may have changed — check https://docs.fathom.ai`);
+      console.error(`Fathom returned 404 for ${pathname}. Endpoint may have changed.`);
     }
     throw new Error(`GET ${url} → ${res.status}: ${body}`);
   }
@@ -77,13 +88,33 @@ async function fathomGet(pathname, params = {}) {
 }
 
 async function listAllMeetings() {
-  // Fathom API paginates. Loop until no next cursor.
+  // Only pull recent meetings (last 90 days). Paginating through years of
+  // history triggers Fathom rate limits and wastes time — the hub only
+  // cares about the current implementation.
+  const CUTOFF_DAYS = 90;
+  const cutoff = new Date(Date.now() - CUTOFF_DAYS * 24 * 60 * 60 * 1000);
   const out = [];
   let cursor = null;
+  let pages = 0;
+  const MAX_PAGES = 20;
   do {
     const params = cursor ? { cursor } : {};
     const page = await fathomGet('/meetings', params);
-    out.push(...(page.items || page.data || []));
+    const items = page.items || page.data || [];
+    out.push(...items);
+    pages += 1;
+    // Stop if the oldest item on this page is older than our cutoff,
+    // since the API returns meetings newest-first.
+    const oldest = items[items.length - 1];
+    const oldestDate = oldest && new Date(oldest.scheduled_start_time || oldest.start_time || oldest.created_at || 0);
+    if (oldestDate && oldestDate < cutoff) {
+      console.log(`  reached cutoff date (${CUTOFF_DAYS}d) after ${pages} page(s) · ${out.length} meetings`);
+      break;
+    }
+    if (pages >= MAX_PAGES) {
+      console.log(`  hit MAX_PAGES safety limit (${MAX_PAGES}) · ${out.length} meetings`);
+      break;
+    }
     cursor = page.next_cursor || page.cursor_next || null;
   } while (cursor);
   return out;

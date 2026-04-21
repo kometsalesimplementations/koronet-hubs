@@ -79,21 +79,31 @@ function explainOAuthError(status, bodyText) {
     '',
   ];
   if (code === 'invalid_grant') {
-    lines.push('LIKELY CAUSES for Client Credentials Flow (try in this order):');
-    lines.push('');
-    lines.push('1. Client Credentials Flow not enabled on the External Client App.');
-    lines.push('   → Setup → App Manager → "Koronet Hubs Automation" → Settings →');
-    lines.push('   → Flow Enablement → check "Enable Client Credentials Flow" → Save');
-    lines.push('');
-    lines.push('2. Run As user not configured or inactive.');
-    lines.push('   → Policies → Edit → Enable Client Credentials Flow →');
-    lines.push('   → Run As (Username): valentina.espinel@koronet.com');
-    lines.push('');
-    lines.push('3. IP Relaxation is still "Enforce IP restrictions".');
-    lines.push('   → Policies → Edit → IP Relaxation: "Relax IP restrictions"');
-    lines.push('');
-    lines.push('4. App was just created or policies saved recently (< 10 min).');
-    lines.push('   → Wait 10 minutes for Salesforce to propagate and retry.');
+    const desc2 = (desc || '').toLowerCase();
+    if (desc2.includes('not supported on this domain')) {
+      lines.push('CAUSE: You are calling the generic login.salesforce.com endpoint.');
+      lines.push('Client Credentials Flow must be called against the org\'s My Domain URL.');
+      lines.push('');
+      lines.push('FIX: Set the SF_LOGIN_URL secret to your My Domain URL.');
+      lines.push('     For Koronet this is:  https://kometsales.my.salesforce.com');
+      lines.push('     Or confirm by: Salesforce Setup → My Domain → see "Current My Domain URL"');
+    } else {
+      lines.push('LIKELY CAUSES for Client Credentials Flow (try in this order):');
+      lines.push('');
+      lines.push('1. Client Credentials Flow not enabled on the External Client App.');
+      lines.push('   → Setup → App Manager → "Koronet Hubs Automation" → Settings →');
+      lines.push('   → Flow Enablement → check "Enable Client Credentials Flow" → Save');
+      lines.push('');
+      lines.push('2. Run As user not configured or inactive.');
+      lines.push('   → Policies → Edit → Enable Client Credentials Flow →');
+      lines.push('   → Run As (Username): valentina.espinel@koronet.com');
+      lines.push('');
+      lines.push('3. IP Relaxation is still "Enforce IP restrictions".');
+      lines.push('   → Policies → Edit → IP Relaxation: "Relax IP restrictions"');
+      lines.push('');
+      lines.push('4. App was just created or policies saved recently (< 10 min).');
+      lines.push('   → Wait 10 minutes for Salesforce to propagate and retry.');
+    }
   } else if (code === 'invalid_client_id' || code === 'invalid_client') {
     lines.push('The Consumer Key or Secret in SF_CLIENT_ID / SF_CLIENT_SECRET does not match the Connected App.');
     lines.push('→ Salesforce Setup → App Manager → "Koronet Hub" → View → copy the consumer key/secret again.');
@@ -110,7 +120,9 @@ function explainOAuthError(status, bodyText) {
 }
 
 async function authenticate() {
-  const loginUrl = process.env.SF_LOGIN_URL || 'https://login.salesforce.com';
+  // Client Credentials Flow requires the org's My Domain URL, NOT login.salesforce.com.
+  // Default to Koronet's My Domain. Override via SF_LOGIN_URL secret if needed.
+  const loginUrl = process.env.SF_LOGIN_URL || 'https://kometsales.my.salesforce.com';
   console.log(`attempting Client Credentials OAuth @ ${loginUrl}/services/oauth2/token ...`);
   const body = new URLSearchParams({
     grant_type: 'client_credentials',

@@ -7,16 +7,16 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh}
-.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#1B2838;padding:20px}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#000;padding:20px}
 .login-box{background:#fff;border-radius:16px;padding:48px 40px;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.12)}
 .login-logo{margin-bottom:22px}
 .login-logo img{height:32px}
 .login-box h1{font-size:24px;font-weight:600;color:#1a1a18;margin-bottom:4px}
 .login-box .login-sub{font-size:14px;color:#73726c;margin-bottom:28px}
 .login-box input{width:100%;padding:12px 16px;border:1.5px solid #e0ded6;border-radius:10px;font-size:14px;outline:none;margin-bottom:16px;background:#f8f7f4}
-.login-box input:focus{border-color:#1B2838}
-.login-box button{width:100%;padding:14px;border:none;border-radius:10px;background:#1B2838;color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:background .15s}
-.login-box button:hover{background:#2d3e52}
+.login-box input:focus{border-color:#000}
+.login-box button{width:100%;padding:14px;border:none;border-radius:10px;background:#000;color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:background .15s}
+.login-box button:hover{background:#222}
 .login-error{color:#c62828;font-size:12px;margin-top:-8px;margin-bottom:12px;display:none}
 .hub{max-width:1100px;margin:0 auto;padding:24px 16px;display:none}
 .topbar{background:#fff;border:.5px solid #e0ded6;border-radius:12px;padding:20px 24px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
@@ -303,102 +303,81 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
       <svg viewBox="0 0 520 920" xmlns="http://www.w3.org/2000/svg" style="width:100%">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0 0L10 5L0 10z" fill="#e0ded6"/>
+            <path d="M0 0L10 5L0 10z" fill="#b4b2a9"/>
           </marker>
         </defs>
 
-        <!-- 1. Purchase Order -->
-        <rect x="140" y="10" width="240" height="50" rx="8" fill="#e6f1fb" stroke="#185fa5" stroke-width="1" cursor="pointer" class="wnode" data-step="po"/>
-        <text x="260" y="32" text-anchor="middle" font-size="12" font-weight="500" fill="#185fa5">Purchase Order</text>
-        <text x="260" y="47" text-anchor="middle" font-size="10" fill="#73726c">Future sales</text>
-        <line x1="260" y1="60" x2="260" y2="80" stroke="#e0ded6" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="140" y="10" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="po"/>
+        <text x="260" y="32" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Purchase Order</text>
+        <text x="260" y="47" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">Future sales</text>
+        <line x1="260" y1="60" x2="260" y2="80" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
 
-        <!-- 2. PO Confirmed -->
-        <rect x="140" y="80" width="240" height="50" rx="8" fill="#e6f1fb" stroke="#185fa5" stroke-width="1" cursor="pointer" class="wnode" data-step="confirmed"/>
-        <text x="260" y="102" text-anchor="middle" font-size="12" font-weight="500" fill="#185fa5">PO Confirmed</text>
-        <text x="260" y="117" text-anchor="middle" font-size="10" fill="#73726c">Future inventory visible</text>
-        <line x1="260" y1="130" x2="260" y2="150" stroke="#e0ded6" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="140" y="80" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="confirmed"/>
+        <text x="260" y="102" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">PO Confirmed</text>
+        <text x="260" y="117" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">Future inventory visible</text>
+        <line x1="260" y1="130" x2="260" y2="150" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
 
-        <!-- 3. Sales -->
-        <rect x="175" y="150" width="170" height="45" rx="8" fill="#e6f1fb" stroke="#185fa5" stroke-width="1" cursor="pointer" class="wnode" data-step="sales"/>
-        <text x="260" y="177" text-anchor="middle" font-size="12" font-weight="500" fill="#185fa5">Sales</text>
+        <rect x="175" y="150" width="170" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="sales"/>
+        <text x="260" y="177" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Sales</text>
 
-        <!-- Branch label -->
-        <text x="260" y="210" text-anchor="middle" font-size="10" fill="#93928b">order channel?</text>
-        <line x1="220" y1="195" x2="140" y2="230" stroke="#e0ded6" stroke-width="1" stroke-dasharray="4"/>
-        <line x1="300" y1="195" x2="380" y2="230" stroke="#e0ded6" stroke-width="1" stroke-dasharray="4"/>
+        <text x="260" y="210" text-anchor="middle" font-size="10" fill="#93928b" pointer-events="none">order channel?</text>
+        <line x1="220" y1="195" x2="140" y2="230" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="300" y1="195" x2="380" y2="230" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
 
-        <!-- eCommerce branch (left) -->
-        <rect x="30" y="230" width="160" height="45" rx="8" fill="#fef3e2" stroke="#c47e17" stroke-width="1" cursor="pointer" class="wnode" data-step="ecom"/>
-        <text x="110" y="249" text-anchor="middle" font-size="11" font-weight="500" fill="#c47e17">eCommerce</text>
-        <text x="110" y="264" text-anchor="middle" font-size="9" fill="#73726c">Online checkout</text>
+        <rect x="30" y="230" width="160" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="ecom"/>
+        <text x="110" y="249" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">eCommerce</text>
+        <text x="110" y="264" text-anchor="middle" font-size="9" fill="#73726c" pointer-events="none">Online checkout</text>
 
-        <!-- K2K branch (right) -->
-        <rect x="330" y="230" width="160" height="45" rx="8" fill="#f0efe8" stroke="#93928b" stroke-width="1" cursor="pointer" class="wnode" data-step="k2k"/>
-        <text x="410" y="257" text-anchor="middle" font-size="11" font-weight="500" fill="#73726c">K2K order</text>
+        <rect x="330" y="230" width="160" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="k2k"/>
+        <text x="410" y="257" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">K2K order</text>
 
-        <!-- Checkout payment (below eCommerce) -->
-        <line x1="110" y1="275" x2="110" y2="295" stroke="#e0ded6" stroke-width="1" marker-end="url(#arr)"/>
-        <rect x="30" y="295" width="160" height="45" rx="8" fill="#fef3e2" stroke="#c47e17" stroke-width="1" cursor="pointer" class="wnode" data-step="checkout"/>
-        <text x="110" y="314" text-anchor="middle" font-size="11" font-weight="500" fill="#c47e17">Checkout payment</text>
-        <text x="110" y="329" text-anchor="middle" font-size="9" fill="#73726c">Pay now or schedule</text>
+        <line x1="110" y1="275" x2="110" y2="295" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+        <rect x="30" y="295" width="160" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="checkout"/>
+        <text x="110" y="314" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">Checkout payment</text>
+        <text x="110" y="329" text-anchor="middle" font-size="9" fill="#73726c" pointer-events="none">Pay now or schedule</text>
 
-        <!-- Merge lines down to Staging -->
-        <line x1="110" y1="340" x2="260" y2="370" stroke="#e0ded6" stroke-width="1"/>
-        <line x1="410" y1="275" x2="260" y2="370" stroke="#e0ded6" stroke-width="1"/>
+        <line x1="110" y1="340" x2="260" y2="370" stroke="#b4b2a9" stroke-width="1"/>
+        <line x1="410" y1="275" x2="260" y2="370" stroke="#b4b2a9" stroke-width="1"/>
 
-        <!-- 4. Staging Area -->
-        <rect x="140" y="370" width="240" height="50" rx="8" fill="#e6f1fb" stroke="#185fa5" stroke-width="1" cursor="pointer" class="wnode" data-step="staging"/>
-        <text x="260" y="392" text-anchor="middle" font-size="12" font-weight="500" fill="#185fa5">Staging Area</text>
-        <text x="260" y="407" text-anchor="middle" font-size="10" fill="#73726c">Confirm or scan boxes</text>
+        <rect x="140" y="370" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="staging"/>
+        <text x="260" y="392" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Staging Area</text>
+        <text x="260" y="407" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">Confirm or scan boxes</text>
 
-        <!-- Branch: linked to customer? -->
-        <text x="260" y="438" text-anchor="middle" font-size="10" fill="#93928b">linked to customer?</text>
-        <line x1="200" y1="420" x2="120" y2="455" stroke="#e0ded6" stroke-width="1" stroke-dasharray="4"/>
-        <line x1="320" y1="420" x2="400" y2="455" stroke="#e0ded6" stroke-width="1" stroke-dasharray="4"/>
-        <text x="120" y="450" text-anchor="middle" font-size="9" fill="#93928b">Yes</text>
+        <text x="260" y="438" text-anchor="middle" font-size="10" fill="#93928b" pointer-events="none">linked to customer?</text>
+        <line x1="200" y1="420" x2="120" y2="455" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="320" y1="420" x2="400" y2="455" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
+        <text x="120" y="450" text-anchor="middle" font-size="9" fill="#93928b" pointer-events="none">Yes</text>
 
-        <!-- Invoice (left) -->
-        <rect x="30" y="455" width="180" height="40" rx="8" fill="#e2f5ee" stroke="#1d9e75" stroke-width="1" cursor="pointer" class="wnode" data-step="invoice"/>
-        <text x="120" y="479" text-anchor="middle" font-size="11" font-weight="500" fill="#1d9e75">Invoice generated</text>
+        <rect x="30" y="455" width="180" height="40" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="invoice"/>
+        <text x="120" y="479" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">Invoice generated</text>
 
-        <!-- Open Market (right) -->
-        <rect x="310" y="455" width="180" height="40" rx="8" fill="#f0efe8" stroke="#93928b" stroke-width="1" cursor="pointer" class="wnode" data-step="openmarket"/>
-        <text x="400" y="472" text-anchor="middle" font-size="11" font-weight="500" fill="#73726c">Open Market</text>
-        <text x="400" y="486" text-anchor="middle" font-size="9" fill="#93928b">Order Entry</text>
+        <rect x="310" y="455" width="180" height="40" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="openmarket"/>
+        <text x="400" y="472" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">Open Market</text>
+        <text x="400" y="486" text-anchor="middle" font-size="9" fill="#93928b" pointer-events="none">Order Entry</text>
 
-        <!-- Merge to Shipping -->
-        <line x1="120" y1="495" x2="260" y2="525" stroke="#e0ded6" stroke-width="1"/>
-        <line x1="400" y1="495" x2="260" y2="525" stroke="#e0ded6" stroke-width="1"/>
+        <line x1="120" y1="495" x2="260" y2="525" stroke="#b4b2a9" stroke-width="1"/>
+        <line x1="400" y1="495" x2="260" y2="525" stroke="#b4b2a9" stroke-width="1"/>
 
-        <!-- 5. Shipping -->
-        <rect x="140" y="525" width="240" height="50" rx="8" fill="#e6f1fb" stroke="#185fa5" stroke-width="1" cursor="pointer" class="wnode" data-step="shipping"/>
-        <text x="260" y="554" text-anchor="middle" font-size="12" font-weight="500" fill="#185fa5">Shipping out</text>
-        <line x1="260" y1="575" x2="260" y2="600" stroke="#e0ded6" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="140" y="525" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="shipping"/>
+        <text x="260" y="554" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Shipping out</text>
+        <line x1="260" y1="575" x2="260" y2="600" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
 
-        <!-- PAYMENT COLLECTION label -->
-        <text x="260" y="615" text-anchor="middle" font-size="10" font-weight="600" fill="#c47e17" letter-spacing=".5">PAYMENT COLLECTION</text>
+        <text x="260" y="615" text-anchor="middle" font-size="10" font-weight="600" fill="#73726c" letter-spacing=".5" pointer-events="none">PAYMENT COLLECTION</text>
 
-        <!-- 6. Receive -->
-        <rect x="140" y="625" width="240" height="45" rx="8" fill="#fef3e2" stroke="#c47e17" stroke-width="1" cursor="pointer" class="wnode" data-step="receive"/>
-        <text x="260" y="652" text-anchor="middle" font-size="12" font-weight="500" fill="#c47e17">Receive</text>
-        <line x1="260" y1="670" x2="260" y2="690" stroke="#e0ded6" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="140" y="625" width="240" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="receive"/>
+        <text x="260" y="652" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Receive Payment</text>
+        <line x1="260" y1="670" x2="260" y2="690" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
 
-        <!-- 7. Invoices & Statements -->
-        <rect x="110" y="690" width="300" height="50" rx="8" fill="#fef3e2" stroke="#c47e17" stroke-width="1" cursor="pointer" class="wnode" data-step="statements"/>
-        <text x="260" y="712" text-anchor="middle" font-size="12" font-weight="500" fill="#c47e17">Invoices &amp; Statements</text>
-        <text x="260" y="728" text-anchor="middle" font-size="10" fill="#73726c">Payment Links</text>
-        <line x1="260" y1="740" x2="260" y2="760" stroke="#e0ded6" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="110" y="690" width="300" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="statements"/>
+        <text x="260" y="718" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Invoices &amp; Statements</text>
+        <line x1="260" y1="740" x2="260" y2="760" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
 
-        <!-- 8. Statement & Payment Links -->
-        <rect x="110" y="760" width="300" height="45" rx="8" fill="#fef3e2" stroke="#c47e17" stroke-width="1" cursor="pointer" class="wnode" data-step="stpay"/>
-        <text x="260" y="787" text-anchor="middle" font-size="12" font-weight="500" fill="#c47e17">Statement &amp; Payment Links</text>
-        <line x1="260" y1="805" x2="260" y2="830" stroke="#e0ded6" stroke-width="1.5" marker-end="url(#arr)"/>
+        <text x="260" y="787" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Payment links</text>
+        <line x1="260" y1="805" x2="260" y2="830" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
 
-        <!-- 9. Reconciliation -->
-        <rect x="120" y="830" width="280" height="50" rx="8" fill="#e2f5ee" stroke="#1d9e75" stroke-width="1" cursor="pointer" class="wnode" data-step="recon"/>
-        <text x="260" y="852" text-anchor="middle" font-size="12" font-weight="500" fill="#1d9e75">Reconciliation</text>
-        <text x="260" y="868" text-anchor="middle" font-size="10" fill="#73726c">A/P · A/R · Payouts</text>
+        <rect x="120" y="830" width="280" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="recon"/>
+        <text x="260" y="852" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Reconciliation</text>
+        <text x="260" y="868" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">A/P · A/R · Payouts</text>
       </svg>
     </div>
     <div class="wdetail" id="wdetail">
@@ -570,32 +549,32 @@ const wfMap = {
   confirmed: {
     title: 'PO Confirmed',
     sub: 'Future inventory visible',
-    items: ['Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments', 'Grower Portal / Grower Menu: Confirm PO\'s', 'Grower Portal / Grower Menu: Add products to an AWB and print labels']
+    items: ["How to confirm PO's", "How Growers can confirm PO's"]
   },
   sales: {
     title: 'Sales',
     sub: 'Order channels',
-    items: ['How to sell Open Market - eCommerce orders and Manual Orders', 'Pricing: GPM, AWB Freight, Handling and other charges', 'How to Manage Future Inventory']
+    items: ['How to sell']
   },
   ecom: {
     title: 'eCommerce',
     sub: 'Online checkout',
-    items: ['How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment', 'eCommerce Settings, eCommerce Carrousel and How to create or invite eCommerce users', 'E-commerce: Identify top eCommerce candidates for the go live', 'Practice end-to-end eCommerce flow — user invitation, deep links, tags and filters', 'Instruct client to inform their buyers about upcoming eCommerce user creation']
+    items: ['How to fulfill eCommerce orders']
   },
   k2k: {
     title: 'K2K order',
     sub: 'Vendor-to-vendor connections',
-    items: ['K2K Connections: How to send and accept connection requests, browse vendor inventory and check availability', 'K2K Connections: How to sell K2K inventory and fulfill K2K orders end to end', 'Set up always on Buyer / Vendor Connections']
+    items: ['How to fulfill K2K orders']
   },
   checkout: {
     title: 'Checkout payment',
     sub: 'Pay now or schedule',
-    items: ['How to Get Paid: Pay & Confirm / POS machine', 'How to Get Paid: Invoice Payment Links', 'Koronet Payments full training — Prepaid, Scheduled Payments, Payment Links, Order Entry & AR Collection']
+    items: ['How to Pay Now or schedule payment']
   },
   staging: {
     title: 'Staging Area',
     sub: 'Confirm or scan boxes',
-    items: ['Staging Area: Arrival date, manual confirmation, box scanning & batch labels']
+    items: ['How to add arrival date and confirm items manually or with scanner']
   },
   invoice: {
     title: 'Invoice generated',
@@ -605,27 +584,27 @@ const wfMap = {
   openmarket: {
     title: 'Open Market',
     sub: 'Order Entry',
-    items: ['How to sell Open Market - eCommerce orders and Manual Orders', 'Manual Prebooks - Future Sales and allocation if applicable', 'Prebook Summary: How to fulfill Prebook Orders Standard & Fulfillment Guide']
+    items: ['How to sell Open Market - eCommerce orders and Manual Orders']
   },
   shipping: {
     title: 'Shipping out',
     sub: 'Outbound shipments',
-    items: ['Shipping: Outbound shipments / Picking items using bunch labels']
+    items: ['How to print shipping documents']
   },
   receive: {
-    title: 'Receive',
+    title: 'Receive Payment',
     sub: 'Payment collection',
-    items: ['How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments', 'AR: Payment History (Refunds, Chargebacks)']
+    items: ['How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments']
   },
   statements: {
     title: 'Invoices & Statements',
-    sub: 'Payment Links',
-    items: ['How to generate Statements and use payment links', 'How to Get Paid: Invoice Payment Links']
+    sub: '',
+    items: ['How to generate Statements and use payment links', 'How to generate invoices with payment links']
   },
   stpay: {
-    title: 'Statement & Payment Links',
-    sub: 'Collection tools',
-    items: ['How to generate Statements and use payment links', 'Payouts and settlement report']
+    title: 'Payment links',
+    sub: '',
+    items: ['How to send payment links']
   },
   recon: {
     title: 'Reconciliation',
@@ -648,7 +627,7 @@ document.querySelectorAll('.wnode').forEach(node => {
     });
 
     let html = '<div class="wd-title">' + data.title + '</div>';
-    html += '<div class="wd-sub">' + data.sub + '</div>';
+    if (data.sub) html += '<div class="wd-sub">' + data.sub + '</div>';
     data.items.forEach(item => {
       html += '<div class="wd-item"><span class="wd-dot"></span>' + item + '</div>';
     });

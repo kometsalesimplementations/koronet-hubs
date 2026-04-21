@@ -1,27 +1,30 @@
 #!/usr/bin/env node
 /**
- * Koronet Hubs — Salesforce PMT sync
+ * Koronet Hubs — Salesforce PMT sync (Salesforce CLI edition)
  *
- * Pulls inov8__PMT_Project__c records for each hub configured in /config/hubs.json
- * and writes /data/{slug}/pmt.json so the hub HTML can fetch it and render phases.
+ * Uses `sf` (Salesforce CLI) to authenticate and query PMT records.
+ * This sidesteps REST API permission issues that blocked the Connected App path.
  *
- * Credentials are read from env (GitHub Secrets):
- *   SF_LOGIN_URL         (default: https://login.salesforce.com)
- *   SF_CLIENT_ID         (Consumer Key of Connected App "Koronet Hub")
- *   SF_CLIENT_SECRET     (Consumer Secret)
- *   SF_USERNAME
- *   SF_PASSWORD
- *   SF_SECURITY_TOKEN    (appended to password in username-password flow)
+ * Credentials (GitHub Secrets):
+ *   SF_AUTH_URL   — the `sfdxAuthUrl` Valentina pulled locally via:
+ *                   sf org login web
+ *                   sf org display --target-org <user> --verbose --json
+ *                   → copy the "sfdxAuthUrl": "force://..." value.
  *
- * Auth: OAuth 2.0 Username-Password flow. Works for server-to-server use
- * provided the Connected App has password flow enabled and IP restrictions allow it.
+ * Flow:
+ *   1. Write SF_AUTH_URL to a temp file.
+ *   2. `sf org login sfdx-url --sfdx-url-file <tmp>` — authenticates the CLI.
+ *   3. `sf data query --query "SELECT ... FROM inov8__PMT_Project__c WHERE Id='...'" --json`
+ *      per hub, parse the result, write data/{slug}/pmt.json.
  */
 
+import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const API_VERSION = 'v60.0';
+const ORG_ALIAS = 'koronet-hub-sync';
 
 async function readJson(rel) {
   return JSON.parse(await fs.readFile(path.join(ROOT, rel), 'utf8'));
@@ -40,128 +43,63 @@ function requireEnv(key) {
   return v;
 }
 
-/**
- * Upfront validation of every required secret. Client Credentials Flow only
- * needs the app's Consumer Key/Secret — no user password or security token.
- */
 function validateSecrets() {
-  const required = ['SF_CLIENT_ID', 'SF_CLIENT_SECRET'];
-  const missing = required.filter((k) => !process.env[k]);
-  if (missing.length) {
+  if (!process.env.SF_AUTH_URL) {
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.error('MISSING GITHUB SECRETS');
+    console.error('MISSING GITHUB SECRET: SF_AUTH_URL');
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.error(`The following ${missing.length} secret(s) are not set on the repo:`);
-    missing.forEach((k) => console.error(`  · ${k}`));
-    console.error('');
-    console.error('Fix: https://github.com/kometsalesimplementations/koronet-hubs/settings/secrets/actions');
+    console.error('Get it locally (once) with:');
+    console.error('  sf org login web');
+    console.error('  sf org list  (note your username)');
+    console.error('  sf org display --target-org <username> --verbose --json');
+    console.error('Then copy the "sfdxAuthUrl" value (starts with "force://...").');
+    console.error('Add it at:');
+    console.error('  https://github.com/kometsalesimplementations/koronet-hubs/settings/secrets/actions');
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     process.exit(1);
   }
-  const report = required.map((k) => `  ${k}: set (${process.env[k].length} chars)`).join('\n');
-  console.log('secrets present:\n' + report);
+  console.log(`SF_AUTH_URL: set (${process.env.SF_AUTH_URL.length} chars)`);
 }
 
-/**
- * Translate common Salesforce OAuth errors into actionable instructions.
- */
-function explainOAuthError(status, bodyText) {
-  let parsed = {};
-  try { parsed = JSON.parse(bodyText); } catch { /* ignore */ }
-  const code = parsed.error || '';
-  const desc = parsed.error_description || bodyText;
-  const lines = [
-    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-    `SALESFORCE OAUTH FAILED — HTTP ${status}`,
-    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-    `error: ${code}`,
-    `detail: ${desc}`,
-    '',
-  ];
-  if (code === 'invalid_grant') {
-    const desc2 = (desc || '').toLowerCase();
-    if (desc2.includes('not supported on this domain')) {
-      lines.push('CAUSE: You are calling the generic login.salesforce.com endpoint.');
-      lines.push('Client Credentials Flow must be called against the org\'s My Domain URL.');
-      lines.push('');
-      lines.push('FIX: Set the SF_LOGIN_URL secret to your My Domain URL.');
-      lines.push('     For Koronet this is:  https://kometsales.my.salesforce.com');
-      lines.push('     Or confirm by: Salesforce Setup → My Domain → see "Current My Domain URL"');
-    } else {
-      lines.push('LIKELY CAUSES for Client Credentials Flow (try in this order):');
-      lines.push('');
-      lines.push('1. Client Credentials Flow not enabled on the External Client App.');
-      lines.push('   → Setup → App Manager → "Koronet Hubs Automation" → Settings →');
-      lines.push('   → Flow Enablement → check "Enable Client Credentials Flow" → Save');
-      lines.push('');
-      lines.push('2. Run As user not configured or inactive.');
-      lines.push('   → Policies → Edit → Enable Client Credentials Flow →');
-      lines.push('   → Run As (Username): valentina.espinel@koronet.com');
-      lines.push('');
-      lines.push('3. IP Relaxation is still "Enforce IP restrictions".');
-      lines.push('   → Policies → Edit → IP Relaxation: "Relax IP restrictions"');
-      lines.push('');
-      lines.push('4. App was just created or policies saved recently (< 10 min).');
-      lines.push('   → Wait 10 minutes for Salesforce to propagate and retry.');
+async function authenticateCli() {
+  const tmpFile = path.join(os.tmpdir(), `sfdx-auth-${Date.now()}.txt`);
+  await fs.writeFile(tmpFile, requireEnv('SF_AUTH_URL').trim() + '\n', 'utf8');
+  try {
+    const out = execSync(
+      `sf org login sfdx-url --sfdx-url-file "${tmpFile}" --alias ${ORG_ALIAS} --set-default --json`,
+      { encoding: 'utf8' }
+    );
+    const parsed = JSON.parse(out);
+    if (parsed.status !== 0) {
+      throw new Error(`sf login failed: ${parsed.message || out}`);
     }
-  } else if (code === 'invalid_client_id' || code === 'invalid_client') {
-    lines.push('The Consumer Key or Secret in SF_CLIENT_ID / SF_CLIENT_SECRET does not match the Connected App.');
-    lines.push('→ Salesforce Setup → App Manager → "Koronet Hub" → View → copy the consumer key/secret again.');
-  } else if (code === 'inactive_user') {
-    lines.push('The user SF_USERNAME is inactive or locked out.');
-  } else if (code === 'unsupported_grant_type') {
-    lines.push('The Connected App has username-password flow disabled.');
-    lines.push('→ Salesforce Setup → App Manager → "Koronet Hub" → Edit → OAuth Policies → enable "Username-Password Flow" (OAuth and OpenID Connect Settings).');
-  } else {
-    lines.push('Check the error description above. If unclear, open a Salesforce case with the error code.');
+    console.log(`sf CLI authenticated · org alias "${ORG_ALIAS}"`);
+  } finally {
+    // Always remove the temp file with the auth URL.
+    try { await fs.unlink(tmpFile); } catch { /* ignore */ }
   }
-  lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  return lines.join('\n');
 }
 
-async function authenticate() {
-  // Client Credentials Flow requires the org's My Domain URL, NOT login.salesforce.com.
-  // Default to Koronet's My Domain. Override via SF_LOGIN_URL secret if needed.
-  const loginUrl = process.env.SF_LOGIN_URL || 'https://kometsales.my.salesforce.com';
-  console.log(`attempting Client Credentials OAuth @ ${loginUrl}/services/oauth2/token ...`);
-  const body = new URLSearchParams({
-    grant_type: 'client_credentials',
-    client_id: requireEnv('SF_CLIENT_ID'),
-    client_secret: requireEnv('SF_CLIENT_SECRET'),
-  });
-  const res = await fetch(`${loginUrl}/services/oauth2/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body,
-  });
-  if (!res.ok) {
-    const errText = await res.text();
-    console.error(explainOAuthError(res.status, errText));
-    throw new Error(`OAuth failed ${res.status}`);
+function runSoqlQuery(soql) {
+  const out = execSync(
+    `sf data query --query "${soql.replace(/"/g, '\\"')}" --target-org ${ORG_ALIAS} --json`,
+    { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 }
+  );
+  const parsed = JSON.parse(out);
+  if (parsed.status !== 0) {
+    throw new Error(`sf query failed: ${parsed.message || out}`);
   }
-  const json = await res.json();
-  console.log(`auth ok · instance ${json.instance_url}`);
-  return { accessToken: json.access_token, instanceUrl: json.instance_url };
-}
-
-async function getRecord({ accessToken, instanceUrl }, pmtId) {
-  const url = `${instanceUrl}/services/data/${API_VERSION}/sobjects/inov8__PMT_Project__c/${pmtId}`;
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  if (!res.ok) {
-    throw new Error(`GET ${url} → ${res.status}: ${await res.text()}`);
-  }
-  return res.json();
+  return parsed.result;
 }
 
 /**
- * Normalize raw PMT record into a stable shape that the hub can consume.
- * Keeps `raw` untouched for debugging, plus a curated `phases` / `targets` section.
- * Field names come from describe() of inov8__PMT_Project__c in the Koronet org.
- * If a field is missing we leave it null rather than inventing a value.
+ * Normalize raw PMT record into the shape the hub consumes.
+ * Field names are assumed — if a field doesn't exist in the org, it comes back
+ * missing and we leave it null. The `raw` block is kept for debugging and for
+ * discovering the real field names on the first run.
  */
 function normalize(raw) {
+  if (!raw) return null;
   const pct = (v) => (typeof v === 'number' ? Math.round(v) : null);
   return {
     fetched_at: new Date().toISOString(),
@@ -189,18 +127,27 @@ function normalize(raw) {
 
 async function main() {
   validateSecrets();
+  await authenticateCli();
+
   const { hubs } = await readJson('config/hubs.json');
-  const auth = await authenticate();
 
   for (const hub of hubs) {
     try {
       console.log(`--- ${hub.slug} (${hub.pmt_id}) ---`);
-      const raw = await getRecord(auth, hub.pmt_id);
-      const normalized = normalize(raw);
+      // Use FIELDS(ALL) to grab every standard and custom field at once.
+      // LIMIT 200 is required when using FIELDS(ALL).
+      const soql = `SELECT FIELDS(ALL) FROM inov8__PMT_Project__c WHERE Id = '${hub.pmt_id}' LIMIT 200`;
+      const result = runSoqlQuery(soql);
+      const record = result?.records?.[0];
+      if (!record) {
+        console.warn(`  no PMT record returned for Id=${hub.pmt_id}`);
+        continue;
+      }
+      const normalized = normalize(record);
       await writeJson(`data/${hub.slug}/pmt.json`, normalized);
     } catch (err) {
       console.error(`ERROR syncing ${hub.slug}: ${err.message}`);
-      // Do not throw — keep going so one bad record doesn't break the whole run.
+      // Keep going so one bad record does not break the whole run.
     }
   }
 }

@@ -28,21 +28,26 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Salesforce CLI
+        run: npm install --global @salesforce/cli
+
       - name: Run PMT sync
         env:
-          SF_LOGIN_URL: ${{ secrets.SF_LOGIN_URL }}
-          SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID }}
-          SF_CLIENT_SECRET: ${{ secrets.SF_CLIENT_SECRET }}
+          SF_AUTH_URL: ${{ secrets.SF_AUTH_URL }}
         run: node scripts/sync-pmt.mjs
 
       - name: Commit and push if changed
         run: |
           git config user.name "koronet-hubs-bot"
           git config user.email "bot@koronet.com"
-          git add data/
-          if git diff --cached --quiet; then
-            echo "no PMT changes"
+          if [ -d data ]; then
+            git add data/
+            if git diff --cached --quiet; then
+              echo "no PMT changes"
+            else
+              git commit -m "chore(pmt): sync from Salesforce"
+              git push
+            fi
           else
-            git commit -m "chore(pmt): sync from Salesforce"
-            git push
+            echo "no data/ directory — sync produced no files"
           fi

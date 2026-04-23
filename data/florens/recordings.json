@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-04-22T16:19:08.842Z",
+  "updated_at": "2026-04-23T14:17:40.195Z",
   "recordings": [
+    {
+      "id": 140220254,
+      "title": "Florens Group | Implementation",
+      "url": "https://fathom.video/share/t4gno_tvFavaayknGys-K45pDHSzTWyF",
+      "date": "2026-04-22T17:00:00Z",
+      "duration_minutes": 40,
+      "host": "Manuel Szajowicz"
+    },
     {
       "id": 139827961,
       "title": "Florens Group LLC | Implementation Kick Off",

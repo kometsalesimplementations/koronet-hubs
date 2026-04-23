@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-22T16:19:08.842Z",
+  "updated_at": "2026-04-23T14:17:40.194Z",
   "statuses": [
     {
       "id": 1,
@@ -22,26 +22,26 @@
     {
       "id": 4,
       "text": "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 5,
       "text": "Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 6,
       "text": "Grower Portal / Grower Menu: Confirm PO's",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 7,
       "text": "Grower Portal / Grower Menu: Add products to an AWB and print labels",
-      "status": "partial",
-      "hits": 1
+      "status": "done",
+      "hits": 2
     },
     {
       "id": 8,
@@ -52,20 +52,20 @@
     {
       "id": 9,
       "text": "Pricing: GPM, AWB Freight, Handling and other charges",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 10,
       "text": "How to Manage Future Inventory",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 11,
       "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
-      "status": "partial",
-      "hits": 1
+      "status": "done",
+      "hits": 2
     },
     {
       "id": 12,
@@ -82,26 +82,26 @@
     {
       "id": 14,
       "text": "Staging Area: Arrival date, manual confirmation, box scanning & batch labels",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 15,
       "text": "Order Entry: Invoice confirmation and Print Documents",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 16,
       "text": "Shipping: Outbound shipments / Picking items using bunch labels",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 17,
       "text": "How to sell Open Market - eCommerce orders and Manual Orders",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 18,
@@ -112,20 +112,20 @@
     {
       "id": 19,
       "text": "How to Get Paid: Invoice Payment Links",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 20,
       "text": "How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 21,
       "text": "AR: Payment History (Refunds, Chargebacks)",
-      "status": "not_started",
-      "hits": 0
+      "status": "done",
+      "hits": 2
     },
     {
       "id": 22,

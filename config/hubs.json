@@ -1,6 +1,6 @@
 {
   "$schema": "./hubs.schema.json",
-  "description": "Registro de hubs de Koronet. Agregar entrada por cada nuevo cliente. Las Actions leen esto para saber qué hubs sincronizar. El push a este archivo dispara sync-pmt y sync-fathom.",
+  "description": "Registro de hubs de Koronet. Agregar entrada por cada nuevo cliente. Las Actions leen esto para saber qué hubs sincronizar. Tocar este archivo dispara sync-pmt + sync-fathom.",
   "hubs": [
     {
       "slug": "lartisan",

@@ -1,6 +1,6 @@
 {
   "description": "Lista estática de los 42 training topics. Misma en todos los hubs. NO modificar sin instrucción explícita de Valentina.",
-  "updated": "2026-04-20",
+  "updated": "2026-04-23",
   "topics": [
     {"id": 1, "text": "Komet general tour", "keywords": ["general tour", "tour general", "overview komet"]},
     {"id": 2, "text": "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually", "keywords": ["create customers", "create vendors", "crear cliente", "crear vendor", "box dimensions", "hardgoods"]},

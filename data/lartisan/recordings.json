@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-04-24T16:03:32.029Z",
+  "updated_at": "2026-04-24T20:08:23.357Z",
   "recordings": [
+    {
+      "id": 140940357,
+      "title": "L'artisan | Implementation",
+      "url": "https://fathom.video/share/7GdY-DdzwEV5CzzHE4yWeJVCRHDqtPpg",
+      "date": "2026-04-24T16:00:00Z",
+      "duration_minutes": 53,
+      "host": "Manuel Szajowicz"
+    },
     {
       "id": 140670043,
       "title": "L'artisan | Implementation",

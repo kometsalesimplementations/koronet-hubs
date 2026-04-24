@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-24T20:08:23.355Z",
+  "updated_at": "2026-04-24T20:08:23.373Z",
   "statuses": [
     {
       "id": 1,
@@ -10,20 +10,20 @@
     {
       "id": 2,
       "text": "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 3,
       "text": "Customers: How to collect customer payment methods",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 4,
       "text": "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 5,
@@ -40,56 +40,56 @@
     {
       "id": 7,
       "text": "Grower Portal / Grower Menu: Add products to an AWB and print labels",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 8,
       "text": "Tracking: How to track inbound shipments",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 9,
       "text": "Pricing: GPM, AWB Freight, Handling and other charges",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 10,
       "text": "How to Manage Future Inventory",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 11,
       "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
-      "status": "done",
-      "hits": 3
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 12,
       "text": "Manual Prebooks - Future Sales and allocation if applicable",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 13,
       "text": "Prebook Summary: How to fulfill Prebook Orders Standard & Fulfillment Guide",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 14,
       "text": "Staging Area: Arrival date, manual confirmation, box scanning & batch labels",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 15,
       "text": "Order Entry: Invoice confirmation and Print Documents",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 16,
@@ -100,8 +100,8 @@
     {
       "id": 17,
       "text": "How to sell Open Market - eCommerce orders and Manual Orders",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 18,
@@ -130,8 +130,8 @@
     {
       "id": 22,
       "text": "Payouts and settlement report",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 23,
@@ -142,8 +142,8 @@
     {
       "id": 24,
       "text": "eCommerce Settings, eCommerce Carrousel and How to create or invite eCommerce users",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 25,
@@ -220,8 +220,8 @@
     {
       "id": 37,
       "text": "How to create Customer and Vendor Standing Order's",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 38,
@@ -232,8 +232,8 @@
     {
       "id": 39,
       "text": "Reports overview",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 40,
@@ -250,8 +250,8 @@
     {
       "id": 42,
       "text": "Practice end-to-end eCommerce flow — user invitation (email, QR code & link), deep links, tags and filters",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     }
   ]
 }

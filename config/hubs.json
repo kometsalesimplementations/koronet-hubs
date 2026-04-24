@@ -15,6 +15,13 @@
       "pmt_id": "a9PVL000000JwbN2AS",
       "fathom_client_filter": "Florens",
       "hub_file": "florens-client.html"
+    },
+    {
+      "slug": "florisol",
+      "name": "Florisol & Company Flower Trading LLC",
+      "pmt_id": null,
+      "fathom_client_filter": "Florisol",
+      "hub_file": "florisol-client.html"
     }
   ]
 }

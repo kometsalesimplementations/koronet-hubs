@@ -12,6 +12,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { commitAndPush } from './commit-helper.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const ORG_ALIAS = 'koronet-hub-sync';
@@ -165,6 +166,10 @@ async function main() {
   for (const hub of hubs) {
     try {
       console.log(`--- ${hub.slug} (${hub.pmt_id}) ---`);
+      if (!hub.pmt_id) {
+        console.warn(`  skipping ${hub.slug}: no pmt_id configured`);
+        continue;
+      }
       const projectResult = runSoql(
         `SELECT FIELDS(ALL) FROM inov8__PMT_Project__c WHERE Id = '${hub.pmt_id}' LIMIT 200`
       );
@@ -182,7 +187,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+main()
+  .then(() => commitAndPush('chore(pmt): sync from Salesforce'))
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

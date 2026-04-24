@@ -21,6 +21,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { commitAndPush } from './commit-helper.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const FATHOM_BASE = 'https://api.fathom.ai/external/v1';
@@ -253,7 +254,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+main()
+  .then(() => commitAndPush('chore(fathom): sync transcripts and statuses'))
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

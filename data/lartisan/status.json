@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-23T17:05:42.775Z",
+  "updated_at": "2026-04-24T16:03:32.014Z",
   "statuses": [
     {
       "id": 1,
@@ -22,8 +22,8 @@
     {
       "id": 4,
       "text": "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
-      "status": "partial",
-      "hits": 1
+      "status": "done",
+      "hits": 2
     },
     {
       "id": 5,
@@ -46,8 +46,8 @@
     {
       "id": 8,
       "text": "Tracking: How to track inbound shipments",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 9,

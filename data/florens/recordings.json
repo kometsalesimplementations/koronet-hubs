@@ -1,6 +1,14 @@
 {
-  "updated_at": "2026-04-23T17:05:42.792Z",
+  "updated_at": "2026-04-24T16:03:32.043Z",
   "recordings": [
+    {
+      "id": 140608562,
+      "title": "Florens Group | Implementation",
+      "url": "https://fathom.video/share/HcC3gdojzWj8jCbjSoQzfS36jwn86A3F",
+      "date": "2026-04-23T17:00:00Z",
+      "duration_minutes": 5,
+      "host": "Manuel Szajowicz"
+    },
     {
       "id": 140220254,
       "title": "Florens Group | Implementation",

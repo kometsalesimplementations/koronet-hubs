@@ -22,6 +22,20 @@
       "pmt_id": null,
       "fathom_client_filter": "Florisol",
       "hub_file": "florisol-client.html"
+    },
+    {
+      "slug": "prices",
+      "name": "Price's Floral Wholesale, LLC",
+      "pmt_id": null,
+      "fathom_client_filter": "Price's Floral",
+      "hub_file": "prices-client.html"
+    },
+    {
+      "slug": "ifg",
+      "name": "International Fresh Group, LLC",
+      "pmt_id": null,
+      "fathom_client_filter": "International Fresh",
+      "hub_file": "ifg-client.html"
     }
   ]
 }

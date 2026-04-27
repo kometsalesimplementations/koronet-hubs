@@ -1,0 +1,31 @@
+{
+  "fetched_at": "2026-04-27T22:00:00.000Z",
+  "id": null,
+  "name": "International Fresh Group, LLC",
+  "overall": {
+    "completion_pct": 0,
+    "status": "Sales Handover",
+    "health": "On Track",
+    "level_of_effort": null,
+    "health_comment": "Manual entry. Contract start, kickoff and go-live target provided by Valentina."
+  },
+  "dates": {
+    "start": "2026-04-28",
+    "kickoff": "2026-04-28",
+    "deadline": "2026-06-09",
+    "estimated_go_live": "2026-06-09",
+    "days_to_go_live": 42
+  },
+  "team": {
+    "project_lead": "George Velez",
+    "project_owner": "George Velez"
+  },
+  "phases": [
+    { "name": "Sales Handover", "completion_pct": 0 },
+    { "name": "Account Configuration", "completion_pct": 0 },
+    { "name": "Kickoff", "completion_pct": 0 },
+    { "name": "Training", "completion_pct": 0 },
+    { "name": "Pre Go Live", "completion_pct": 0 },
+    { "name": "Post Go Live", "completion_pct": 0 }
+  ]
+}

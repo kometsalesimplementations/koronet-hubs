@@ -1,0 +1,31 @@
+{
+  "fetched_at": "2026-04-27T13:00:00.000Z",
+  "id": null,
+  "name": "Florisol & Company Flower Trading LLC",
+  "overall": {
+    "completion_pct": 50,
+    "status": "Training and Activation",
+    "health": "On Track",
+    "level_of_effort": "High",
+    "health_comment": "Hard push — special case. Contract date is from 2021; kickoff today (Apr 27, 2026). 30 days to go-live."
+  },
+  "dates": {
+    "start": "2021-11-25",
+    "kickoff": "2026-04-27",
+    "deadline": "2026-05-27",
+    "estimated_go_live": "2026-05-27",
+    "days_to_go_live": 30
+  },
+  "team": {
+    "project_lead": "Valentina Espinel",
+    "project_owner": "Valentina Espinel"
+  },
+  "phases": [
+    { "name": "Sales Handover", "completion_pct": 100 },
+    { "name": "Account Configuration", "completion_pct": 100 },
+    { "name": "Kickoff", "completion_pct": 100 },
+    { "name": "Training", "completion_pct": 0 },
+    { "name": "Pre Go Live", "completion_pct": 0 },
+    { "name": "Post Go Live", "completion_pct": 0 }
+  ]
+}

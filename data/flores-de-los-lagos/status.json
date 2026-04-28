@@ -1,47 +1,47 @@
 {
-  "updated_at": "2026-04-28T15:52:47.421Z",
+  "updated_at": "2026-04-28T15:52:47.440Z",
   "statuses": [
     {
       "id": 1,
       "text": "Komet general tour",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 2,
       "text": "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 3,
       "text": "Customers: How to collect customer payment methods",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 4,
       "text": "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 5,
       "text": "Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 6,
       "text": "Grower Portal / Grower Menu: Confirm PO's",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 7,
       "text": "Grower Portal / Grower Menu: Add products to an AWB and print labels",
-      "status": "done",
-      "hits": 2
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 8,
@@ -58,14 +58,14 @@
     {
       "id": 10,
       "text": "How to Manage Future Inventory",
-      "status": "done",
-      "hits": 2
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 11,
       "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
-      "status": "done",
-      "hits": 3
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 12,
@@ -82,20 +82,20 @@
     {
       "id": 14,
       "text": "Staging Area: Arrival date, manual confirmation, box scanning & batch labels",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 15,
       "text": "Order Entry: Invoice confirmation and Print Documents",
-      "status": "done",
-      "hits": 2
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 16,
       "text": "Shipping: Outbound shipments / Picking items using bunch labels",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 17,
@@ -112,26 +112,26 @@
     {
       "id": 19,
       "text": "How to Get Paid: Invoice Payment Links",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 20,
       "text": "How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 21,
       "text": "AR: Payment History (Refunds, Chargebacks)",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 22,
       "text": "Payouts and settlement report",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 23,
@@ -220,8 +220,8 @@
     {
       "id": 37,
       "text": "How to create Customer and Vendor Standing Order's",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 38,
@@ -232,14 +232,14 @@
     {
       "id": 39,
       "text": "Reports overview",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 40,
       "text": "Koronet Payments full training — Prepaid, Scheduled Payments, Payment Links, Order Entry & AR Collection",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 41,
@@ -250,8 +250,8 @@
     {
       "id": 42,
       "text": "Practice end-to-end eCommerce flow — user invitation (email, QR code & link), deep links, tags and filters",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     }
   ]
 }

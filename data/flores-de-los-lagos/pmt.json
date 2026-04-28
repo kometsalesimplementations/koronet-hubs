@@ -1,0 +1,31 @@
+{
+  "fetched_at": "2026-04-28T15:30:00.000Z",
+  "id": null,
+  "name": "Flores de Los Lagos",
+  "overall": {
+    "completion_pct": 0,
+    "status": "Kickoff and Preparation",
+    "health": "On Track",
+    "level_of_effort": "Standard",
+    "health_comment": "New client. Contract Apr 29, kickoff Apr 30, est. go-live May 30 (30 days)."
+  },
+  "dates": {
+    "start": "2026-04-29",
+    "kickoff": "2026-04-30",
+    "deadline": "2026-05-30",
+    "estimated_go_live": "2026-05-30",
+    "days_to_go_live": 30
+  },
+  "team": {
+    "project_lead": "George Velez",
+    "project_owner": "Felipe Mesa"
+  },
+  "phases": [
+    { "name": "Sales Handover", "completion_pct": 100 },
+    { "name": "Account Configuration", "completion_pct": 0 },
+    { "name": "Kickoff", "completion_pct": 0 },
+    { "name": "Training", "completion_pct": 0 },
+    { "name": "Pre Go Live", "completion_pct": 0 },
+    { "name": "Post Go Live", "completion_pct": 0 }
+  ]
+}

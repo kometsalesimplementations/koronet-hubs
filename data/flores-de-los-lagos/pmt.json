@@ -7,14 +7,14 @@
     "status": "Kickoff and Preparation",
     "health": "On Track",
     "level_of_effort": "Standard",
-    "health_comment": "New client. Contract Apr 29, kickoff Apr 30, est. go-live May 30 (30 days)."
+    "health_comment": "New client. Contract Apr 29, kickoff Apr 30, est. go-live Jun 14 (45 days)."
   },
   "dates": {
     "start": "2026-04-29",
     "kickoff": "2026-04-30",
-    "deadline": "2026-05-30",
-    "estimated_go_live": "2026-05-30",
-    "days_to_go_live": 30
+    "deadline": "2026-06-14",
+    "estimated_go_live": "2026-06-14",
+    "days_to_go_live": 45
   },
   "team": {
     "project_lead": "George Velez",

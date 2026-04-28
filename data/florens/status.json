@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-28T15:52:47.421Z",
+  "updated_at": "2026-04-28T17:59:29.798Z",
   "statuses": [
     {
       "id": 1,
@@ -22,8 +22,8 @@
     {
       "id": 4,
       "text": "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
-      "status": "partial",
-      "hits": 1
+      "status": "done",
+      "hits": 2
     },
     {
       "id": 5,
@@ -220,8 +220,8 @@
     {
       "id": 37,
       "text": "How to create Customer and Vendor Standing Order's",
-      "status": "not_started",
-      "hits": 0
+      "status": "done",
+      "hits": 2
     },
     {
       "id": 38,

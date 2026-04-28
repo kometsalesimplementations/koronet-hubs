@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-27T17:11:59.001Z",
+  "fetched_at": "2026-04-28T15:52:56.098Z",
   "id": "a9PVL000000JwbN2AS",
   "name": "Komet Core Importer/Grower Florens Group LLC",
   "overall": {
@@ -14,7 +14,7 @@
     "kickoff": "2026-04-21",
     "deadline": "2026-07-02",
     "estimated_go_live": "2026-06-01",
-    "days_to_go_live": 35
+    "days_to_go_live": 34
   },
   "team": {
     "project_lead": "Manuel Szajowicz",
@@ -28,7 +28,7 @@
       "health": "On Track",
       "start_date": "2026-04-20",
       "end_date": "2026-04-20",
-      "days_to_go": -7,
+      "days_to_go": -8,
       "task_count": 8,
       "daily_progress": null,
       "raw": {
@@ -59,7 +59,7 @@
         "inov8__Sum_Of_Task_Completion__c": 0,
         "inov8__Task_Count__c": 8,
         "inov8__Daily_progress__c": null,
-        "inov8__Days_to_go__c": -7,
+        "inov8__Days_to_go__c": -8,
         "inov8__Deadline_formula__c": "2026-04-20",
         "inov8__Duration__c": 1,
         "inov8__Expected_age_of_completion__c": 100,
@@ -85,7 +85,7 @@
       "health": "On Track",
       "start_date": "2026-04-20",
       "end_date": "2026-04-21",
-      "days_to_go": -6,
+      "days_to_go": -7,
       "task_count": 6,
       "daily_progress": "100 %",
       "raw": {
@@ -116,7 +116,7 @@
         "inov8__Sum_Of_Task_Completion__c": 500,
         "inov8__Task_Count__c": 6,
         "inov8__Daily_progress__c": "100 %",
-        "inov8__Days_to_go__c": -6,
+        "inov8__Days_to_go__c": -7,
         "inov8__Deadline_formula__c": "2026-04-21",
         "inov8__Duration__c": 2,
         "inov8__Expected_age_of_completion__c": 100,
@@ -142,7 +142,7 @@
       "health": "On Track",
       "start_date": "2026-04-21",
       "end_date": "2026-04-21",
-      "days_to_go": -6,
+      "days_to_go": -7,
       "task_count": 5,
       "daily_progress": null,
       "raw": {
@@ -173,7 +173,7 @@
         "inov8__Sum_Of_Task_Completion__c": 500,
         "inov8__Task_Count__c": 5,
         "inov8__Daily_progress__c": null,
-        "inov8__Days_to_go__c": -6,
+        "inov8__Days_to_go__c": -7,
         "inov8__Deadline_formula__c": "2026-04-21",
         "inov8__Duration__c": 1,
         "inov8__Expected_age_of_completion__c": 100,
@@ -199,7 +199,7 @@
       "health": "On Track",
       "start_date": "2026-04-22",
       "end_date": "2026-06-01",
-      "days_to_go": 35,
+      "days_to_go": 34,
       "task_count": 54,
       "daily_progress": "2.5 %",
       "raw": {
@@ -230,10 +230,10 @@
         "inov8__Sum_Of_Task_Completion__c": 500,
         "inov8__Task_Count__c": 54,
         "inov8__Daily_progress__c": "2.5 %",
-        "inov8__Days_to_go__c": 35,
+        "inov8__Days_to_go__c": 34,
         "inov8__Deadline_formula__c": "2026-06-01",
         "inov8__Duration__c": 41,
-        "inov8__Expected_age_of_completion__c": 12.5,
+        "inov8__Expected_age_of_completion__c": 15,
         "inov8__Health_Icon__c": "<img src=\"/resource/inov8__PMT_Status_logos/On_Track.png\" alt=\"status icon\" style=\"height:17px; width:17px;\" border=\"0\"/>",
         "inov8__Kickoff_formula__c": "2026-04-22",
         "inov8__Length__c": 40,
@@ -256,7 +256,7 @@
       "health": "On Track",
       "start_date": "2026-05-26",
       "end_date": "2026-06-01",
-      "days_to_go": 35,
+      "days_to_go": 34,
       "task_count": 5,
       "daily_progress": "16.66666666666666666666666666666666666667 %",
       "raw": {
@@ -287,10 +287,10 @@
         "inov8__Sum_Of_Task_Completion__c": 0,
         "inov8__Task_Count__c": 5,
         "inov8__Daily_progress__c": "16.66666666666666666666666666666666666667 %",
-        "inov8__Days_to_go__c": 35,
+        "inov8__Days_to_go__c": 34,
         "inov8__Deadline_formula__c": "2026-06-01",
         "inov8__Duration__c": 7,
-        "inov8__Expected_age_of_completion__c": -483.33,
+        "inov8__Expected_age_of_completion__c": -466.67,
         "inov8__Health_Icon__c": "<img src=\"/resource/inov8__PMT_Status_logos/On_Track.png\" alt=\"status icon\" style=\"height:17px; width:17px;\" border=\"0\"/>",
         "inov8__Kickoff_formula__c": "2026-05-26",
         "inov8__Length__c": 6,
@@ -313,7 +313,7 @@
       "health": "On Track",
       "start_date": "2026-06-02",
       "end_date": "2026-07-02",
-      "days_to_go": 66,
+      "days_to_go": 65,
       "task_count": 3,
       "daily_progress": "3.33333333333333333333333333333333333333 %",
       "raw": {
@@ -344,10 +344,10 @@
         "inov8__Sum_Of_Task_Completion__c": 0,
         "inov8__Task_Count__c": 3,
         "inov8__Daily_progress__c": "3.33333333333333333333333333333333333333 %",
-        "inov8__Days_to_go__c": 66,
+        "inov8__Days_to_go__c": 65,
         "inov8__Deadline_formula__c": "2026-07-02",
         "inov8__Duration__c": 31,
-        "inov8__Expected_age_of_completion__c": -120,
+        "inov8__Expected_age_of_completion__c": -116.67,
         "inov8__Health_Icon__c": "<img src=\"/resource/inov8__PMT_Status_logos/On_Track.png\" alt=\"status icon\" style=\"height:17px; width:17px;\" border=\"0\"/>",
         "inov8__Kickoff_formula__c": "2026-06-02",
         "inov8__Length__c": 30,
@@ -380,8 +380,8 @@
     "LastModifiedById": "005VL000005WHKbYAO",
     "SystemModstamp": "2026-04-27T14:35:59.000+0000",
     "LastActivityDate": null,
-    "LastViewedDate": "2026-04-21T17:15:09.000+0000",
-    "LastReferencedDate": "2026-04-21T17:15:09.000+0000",
+    "LastViewedDate": "2026-04-28T15:23:58.000+0000",
+    "LastReferencedDate": "2026-04-28T15:23:58.000+0000",
     "inov8__Assumptions__c": null,
     "inov8__Business_Case__c": null,
     "inov8__Description__c": null,
@@ -422,7 +422,7 @@
     "inov8__Sum_of_sum_of_percentage_completion__c": 1500,
     "inov8__Sum_of_task_count_child_project__c": 0,
     "inov8__Sum_of_tasks_count__c": 81,
-    "inov8__Days_to_go__c": 66,
+    "inov8__Days_to_go__c": 65,
     "inov8__Deadline_formula__c": "2026-07-02",
     "inov8__Duration__c": 74,
     "inov8__End_Fiscal_Year__c": "FY27",
@@ -453,6 +453,6 @@
     "Kickoff_Date__c": "2026-04-21",
     "Implementation_Doc_Link__c": null,
     "Estimated_Go_Live_Date__c": "2026-06-01",
-    "Days_to_Estimated_Go_Live__c": 35
+    "Days_to_Estimated_Go_Live__c": 34
   }
 }

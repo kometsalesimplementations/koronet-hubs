@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-30T20:30:00.000Z",
+  "updated_at": "2026-04-30T20:45:00.000Z",
   "recordings": [
     {
       "id": 655926049,
@@ -8,14 +8,6 @@
       "date": "2026-04-30T19:00:00Z",
       "duration_minutes": 61,
       "host": "George Vélez"
-    },
-    {
-      "id": 138008537,
-      "title": "Komet Sales: Flores de Los Lagos 2nd demo / Komet Core",
-      "url": "https://fathom.video/share/X9eyQtEdsBaZ1zarRp5qxxZZwKQKBvGp",
-      "date": "2026-04-14T20:15:00Z",
-      "duration_minutes": 59,
-      "host": "Felipe Mesa"
     }
   ]
 }

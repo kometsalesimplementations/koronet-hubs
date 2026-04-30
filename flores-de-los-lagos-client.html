@@ -707,7 +707,7 @@ document.querySelectorAll('.wnode').forEach(node => {
 <!-- Live data bootstrap — see lartisan-client.html for full comments -->
 <script>
 (function () {
-  const HUB = 'ifg';
+  const HUB = 'flores-de-los-lagos';
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   async function loadJson(path) {
     try { const r = await fetch(path, {cache: 'no-store'}); return r.ok ? r.json() : null; }

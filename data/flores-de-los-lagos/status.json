@@ -1,0 +1,257 @@
+{
+  "updated_at": "2026-04-30T18:44:30.613Z",
+  "statuses": [
+    {
+      "id": 1,
+      "text": "Komet general tour",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 2,
+      "text": "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 3,
+      "text": "Customers: How to collect customer payment methods",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 4,
+      "text": "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 5,
+      "text": "Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 6,
+      "text": "Grower Portal / Grower Menu: Confirm PO's",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 7,
+      "text": "Grower Portal / Grower Menu: Add products to an AWB and print labels",
+      "status": "partial",
+      "hits": 1
+    },
+    {
+      "id": 8,
+      "text": "Tracking: How to track inbound shipments",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 9,
+      "text": "Pricing: GPM, AWB Freight, Handling and other charges",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 10,
+      "text": "How to Manage Future Inventory",
+      "status": "partial",
+      "hits": 1
+    },
+    {
+      "id": 11,
+      "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
+      "status": "partial",
+      "hits": 1
+    },
+    {
+      "id": 12,
+      "text": "Manual Prebooks - Future Sales and allocation if applicable",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 13,
+      "text": "Prebook Summary: How to fulfill Prebook Orders Standard & Fulfillment Guide",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 14,
+      "text": "Staging Area: Arrival date, manual confirmation, box scanning & batch labels",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 15,
+      "text": "Order Entry: Invoice confirmation and Print Documents",
+      "status": "partial",
+      "hits": 1
+    },
+    {
+      "id": 16,
+      "text": "Shipping: Outbound shipments / Picking items using bunch labels",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 17,
+      "text": "How to sell Open Market - eCommerce orders and Manual Orders",
+      "status": "partial",
+      "hits": 1
+    },
+    {
+      "id": 18,
+      "text": "How to Get Paid: Pay & Confirm / POS machine",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 19,
+      "text": "How to Get Paid: Invoice Payment Links",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 20,
+      "text": "How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 21,
+      "text": "AR: Payment History (Refunds, Chargebacks)",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 22,
+      "text": "Payouts and settlement report",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 23,
+      "text": "Full Flow Practice & Practice edge cases (eg, Cancelations)",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 24,
+      "text": "eCommerce Settings, eCommerce Carrousel and How to create or invite eCommerce users",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 25,
+      "text": "E-commerce: Identify top eCommerce candidates for the go live",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 26,
+      "text": "How to create a Standalone PO for Hardgoods",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 27,
+      "text": "Inventory Hardgoods receiving",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 28,
+      "text": "Hardgoods invoicing",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 29,
+      "text": "Hardgoods full Flow Practice & Practice edge cases (eg, Cancelations)",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 30,
+      "text": "K2K Connections: How to send and accept connection requests, browse vendor inventory and check availability",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 31,
+      "text": "K2K Connections: How to sell K2K inventory and fulfill K2K orders end to end",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 32,
+      "text": "Set up always on Buyer / Vendor Connections",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 33,
+      "text": "Full Flow Practice & Practice edge cases (eg, Cancelations)",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 34,
+      "text": "How to generate Statements and use payment links",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 35,
+      "text": "Order Entry: Customer Credits",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 36,
+      "text": "QC: Inspections and Vendor Credits",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 37,
+      "text": "How to create Customer and Vendor Standing Order's",
+      "status": "partial",
+      "hits": 1
+    },
+    {
+      "id": 38,
+      "text": "A/P - PO Reconciliation, AWB and Inbound Truck Freight Reconciliation",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 39,
+      "text": "Reports overview",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 40,
+      "text": "Koronet Payments full training — Prepaid, Scheduled Payments, Payment Links, Order Entry & AR Collection",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 41,
+      "text": "Instruct client to inform their buyers about upcoming eCommerce user creation",
+      "status": "not_started",
+      "hits": 0
+    },
+    {
+      "id": 42,
+      "text": "Practice end-to-end eCommerce flow — user invitation (email, QR code & link), deep links, tags and filters",
+      "status": "not_started",
+      "hits": 0
+    }
+  ]
+}

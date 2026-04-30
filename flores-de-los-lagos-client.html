@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Flores de Los Lagos — Implementation Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f8f7f4;color:#1a1a18;min-height:100vh}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#000;padding:20px}
+.login-box{background:#fff;border-radius:16px;padding:48px 40px;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.login-logo{margin-bottom:22px}
+.login-logo img{height:32px}
+.login-box h1{font-size:24px;font-weight:600;color:#1a1a18;margin-bottom:4px}
+.login-box .login-sub{font-size:14px;color:#73726c;margin-bottom:28px}
+.login-box input{width:100%;padding:12px 16px;border:1.5px solid #e0ded6;border-radius:10px;font-size:14px;outline:none;margin-bottom:16px;background:#f8f7f4}
+.login-box input:focus{border-color:#000}
+.login-box button{width:100%;padding:14px;border:none;border-radius:10px;background:#000;color:#fff;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:background .15s}
+.login-box button:hover{background:#222}
+.login-error{color:#c62828;font-size:12px;margin-top:-8px;margin-bottom:12px;display:none}
+.hub{max-width:1100px;margin:0 auto;padding:24px 16px;display:none}
+.topbar{background:#fff;border:.5px solid #e0ded6;border-radius:12px;padding:20px 24px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-logo{height:24px;filter:invert(1)}
+.topbar-divider{width:1px;height:28px;background:#e0ded6}
+.topbar h1{font-size:20px;font-weight:500}
+.topbar p{font-size:13px;color:#73726c;margin-top:2px}
+.badge{font-size:11px;padding:4px 12px;border-radius:20px;font-weight:500;background:#e6f1fb;color:#185fa5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:#fff;border:.5px solid #e0ded6;border-radius:10px;padding:14px 16px;text-align:center}
+.stat .label{font-size:11px;color:#73726c;margin-bottom:4px}
+.stat .val{font-size:15px;font-weight:500}
+.stat .sub{font-size:11px;color:#73726c}
+.stat a{color:#185fa5;text-decoration:none;font-size:12px}
+.stat a:hover{text-decoration:underline}
+.tabs-bar{background:#fff;border:.5px solid #e0ded6;border-radius:10px;display:flex;align-items:stretch;margin-bottom:14px;overflow-x:auto}
+.tab{flex:1;padding:12px 8px;text-align:center;font-size:13px;font-weight:500;color:#73726c;cursor:pointer;border:none;background:none;transition:background .15s;white-space:nowrap}
+.tab.active{color:#1a1a18;background:#f8f7f4}
+.tab:hover{background:#f8f7f4}
+.tab-sep{width:1px;background:#e0ded6;margin:8px 0;flex-shrink:0}
+.panel{display:none;padding:22px;background:#fff;border:.5px solid #e0ded6;border-radius:12px}
+.panel.active{display:block}
+.sl{font-size:11px;color:#73726c;text-transform:uppercase;letter-spacing:.5px;font-weight:500;margin-bottom:10px;margin-top:18px}
+.sl:first-child{margin-top:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.ic{background:#f8f7f4;border:.5px solid #e0ded6;border-radius:10px;padding:14px}
+.ic h3{font-size:13px;font-weight:500;margin-bottom:10px}
+.mr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid #e0ded6;font-size:12px}
+.mr:last-child{border-bottom:none}
+.ml{color:#73726c}
+.mv{font-weight:500;text-align:right;max-width:55%}
+.no-data{font-size:12px;color:#b4b2a9;font-style:italic;padding:18px 0;text-align:center}
+
+/* Workflow SVG */
+.workflow-wrap{margin-bottom:22px;border:.5px solid #e0ded6;border-radius:10px;overflow:hidden;display:grid;grid-template-columns:420px 1fr;min-height:500px}
+@media(max-width:800px){.workflow-wrap{grid-template-columns:1fr;}}
+.wsvg{padding:18px;background:#fafaf8;overflow-y:auto;overflow-x:hidden;border-right:.5px solid #e0ded6}
+.wsvg svg{display:block;margin:0 auto}
+.wdetail{padding:20px 24px;background:#fff;font-size:13px;color:#73726c;overflow-y:auto}
+.wempty{color:#b4b2a9;font-style:italic;font-size:13px}
+.wd-title{font-size:18px;font-weight:500;color:#1a1a18;margin-bottom:4px}
+.wd-sub{font-size:13px;color:#73726c;margin-bottom:16px}
+.wd-item{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:6px;background:#f8f7f4;border:.5px solid #e0ded6;border-radius:8px;font-size:12px;color:#1a1a18}
+.wd-dot{width:8px;height:8px;border-radius:50%;background:#b4b2a9;flex-shrink:0}
+.wnode{cursor:pointer;transition:opacity .15s}
+.wnode:hover{opacity:.8}
+.wnode.active rect,.wnode.active{fill:#1a1a18 !important}
+.wnode.active text{fill:#fff !important}
+
+/* Phase bars */
+.phases{margin-bottom:22px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ph-name{font-size:12px;font-weight:500;min-width:160px}
+.ph-bar{flex:1;height:6px;background:#e0ded6;border-radius:4px;overflow:hidden}
+.ph-fill{height:100%;border-radius:4px;background:#1d9e75;transition:width .3s}
+.ph-pct{font-size:11px;color:#73726c;min-width:32px;text-align:right}
+
+/* Training items */
+.tk{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:.5px solid #f0efe8;font-size:12px}
+.tk:last-child{border-bottom:none}
+.tk-n{flex:1;padding-right:12px;color:#1a1a18}
+.sp{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:500;white-space:nowrap}
+.sp-done{background:#e2f5ee;color:#1d9e75}
+.sp-partial{background:#fef3e2;color:#c47e17}
+.sp-not{background:#f0efe8;color:#93928b}
+
+/* Recordings */
+.rc{background:#f8f7f4;border:.5px solid #e0ded6;border-radius:10px;padding:14px;margin-bottom:8px}
+.rc .rt{font-size:13px;font-weight:500;margin-bottom:2px}
+.rc .rm{font-size:11px;color:#73726c}
+.rc a{color:#185fa5;text-decoration:none;font-size:12px}
+.rc a:hover{text-decoration:underline}
+
+/* Email templates */
+.tb{background:#f8f7f4;border:.5px solid #e0ded6;border-radius:10px;padding:14px;margin-bottom:8px}
+.tb .th{font-size:12px;font-weight:500;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.tb .tt{font-size:11px;color:#73726c;line-height:1.5}
+.cb{font-size:11px;padding:4px 10px;border-radius:6px;border:.5px solid #e0ded6;background:#fff;cursor:pointer;color:#73726c}
+.cb:hover{background:#f0efe8}
+
+/* Pre go live */
+.pg-card{background:#f8f7f4;border:.5px solid #e0ded6;border-radius:10px;padding:18px;margin-bottom:10px;text-align:center}
+.pg-card h3{font-size:13px;font-weight:500;margin-bottom:6px}
+.pg-card .pg-val{font-size:28px;font-weight:600;color:#1d9e75}
+.pg-card .pg-sub{font-size:11px;color:#73726c;margin-top:2px}
+.pg-card a{color:#185fa5;text-decoration:none;font-size:11px}
+
+/* KU */
+.ku{background:#f8f7f4;border:.5px solid #e0ded6;border-radius:10px;padding:14px;margin-bottom:8px}
+.ku h3{font-size:13px;font-weight:500;margin-bottom:2px}
+.ku .ku-sub{font-size:11px;color:#73726c;margin-bottom:6px}
+.ku a{color:#185fa5;text-decoration:none;font-size:12px}
+
+/* Team section */
+.team-row{display:flex;gap:8px;margin-bottom:6px}
+.team-role{font-size:11px;color:#73726c;min-width:140px}
+.team-name{font-size:12px;font-weight:500}
+
+/* Kickoff empty */
+.empty-state{text-align:center;padding:48px 24px;color:#b4b2a9}
+.empty-state svg{width:48px;height:48px;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:13px;font-style:italic}
+
+/* Section divider */
+.sdiv{height:1px;background:#e0ded6;margin:18px 0}
+</style>
+</head>
+<body>
+<div class="login-wrap" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo"><img src="data:image/png;base64,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1d7bN085OiK7Rp4vSLgtKx1Ckg84Ch4EAYPWgirishcQELbaKvdK/aem2Ry6NIaagoSHO37NwpPRtPTlC/Hyrxejl/Ljdv4cf/ERqwnFxvxH3anwLPp+JIi6dtjinULkAB2U8Ry9oUgnlSBkJGc+0Se/A03hr3Ka2q3TiamlxXZVucZXEnNs47Qsrwcpz0JCkpVg4zjGRnNBs/HQCOJO/kggGPDI+n/h26jDQulX9UXBbSXjHjNKbQ44EhSlOOrDbTSElSQpa1KAAKkgAKJICSavDq/cHhN3Eej3nVcy1TJoaCA5IhymX0pGcIUUJBOMnvJHlVa9Vaj24sm9N4Y0Y40zo5ci3Tbc+yh1bbMqMlCwpaVf1imypTyFY6jn5gFcoSoNa1jtqm225Uu3OuJdS0+6hlU+HNRISxyl/keiuLSHG0rStTagCE5Vk91RrUu6j1uwnTwE6+2u93Zn5Sat4tkZxptpuc0hp0ulbTYIShLnKEgqKncqKeQJMRUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUH/9k=" alt="Koronet"></div>
+    <h1>Flores de Los Lagos</h1>
+    <div class="login-sub">Implementation Hub</div>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <div class="login-error" id="pwError">Contraseña incorrecta.</div>
+    <button onclick="checkPw()">ENTER</button>
+  </div>
+</div>
+<div class="hub" id="hubContent">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <img class="topbar-logo" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABXATADASIAAhEBAxEB/8QAHQABAAIDAQEBAQAAAAAAAAAAAAcIBQYJBAMBAv/EAEYQAAEDAwIDBAUHCAgHAAAAAAECAwQABREGBwgSIRMxQVEJFCIykRU4YXGBsbQ3QmJzdHV2shcjNTZScqGiJCVTV4KV0f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCmVKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoFKUoMozp3UD1rTdWbFdHLesKKZSIjhZUASCQsDHQgg9e8GsXVpndytabbcJm1E3Rt4+TnZcq6Ik5jtOpdSmW4QCHEnHee7BrARN4duty/wDle9Gh4EGY+ORGqLC12MllXgtxAzzjxPvDvwigrxSpH3o2muu3jsS5x5zF+0pdBz2q+RMFmQkjISrBPIvHhnrg4JwcRxQKUpQZqzaS1Veofrtn0zerjG5ijtokF11HMO8cyUkZ+isMoFJKVAgjoQfCuiPo+vm/j97yfuRXPW4/2hJ/Wq+80HnrJWOwX2/LdRY7LcropkAuiHFW8UA9xVyg4zg9/lWe2i261FudrGPpvTsfK1e3JkrB7KK1nq4s+XkO8nAFXm1RfNA8Ke0LNotDLcy9ykkx2VkB6fIxhT7pHVLY/wBBhI69aDnxe7LebHJRGvdpn2x9aOdDcyMtlSk5IyAoAkZB6/RXgrNa21RfNZ6nm6j1HPcm3GYvnccV3AeCUjuSkDoAOgArC0ClKUClKUClKUClKUClKUClKUClKUClKUClKlDhp2rj7va8maZk3l20Ij2xycH244dKilxpHLgqH/UznPhQRfSt8370CztlufcdHMXNy5tw22ViStkNlXaNJX7oJxjmx31odApSlApSlApSlBO+6XzPdnv2y7finKgip33S+Z7s9+2Xb8U5UEUE5cMuuYDq39n9dK9a0ZqdXq7faHrbpaujbzZPu5Xy58AcK8FZ0i87Ua1i7n3fb+12SdeLrbZBaWIjClBTfeh0+CEKSUqBUR7wrN8Nezl13d1gqK2+5Aslv5XLlOSPaQCfZbb8O0Vg4z0ABJzgA9O4cRiKk9mgFxQSHXVAc7pSkJBWr844A6mg5/6W4Nt0bpGS/eJtisWQP6l+Qp50fWG0lP8AuqBNZ2N3TOsL1puQ+iQ9abg/BcdQCEuKacUgqAPXBKc12Crk1vr+W7Xn8SXH8S5QXf8AR9fN/H73k/ciqPbfaC1FuPuANM6bi9tJeeUp11WQ1GaCvaccV4JGfrJIAySBV4fR9fN/H73k/cisvtxxQbaa31m1pSKi82mc+otx3Lmy02084DgNpUhxWFHwBAB7s5IBDG3Kbt9wn7QIiRUJn3uYCW0HCZF0kgdVr7+RpOfqSDgZUetCNwdYX/Xeq5mptSzVS58pXU9yGkD3W0J/NQO4D7ySaslx5bS6qY1M/ubGmzL1ZX0oakIX7SrZjolIA6BknuPgonm6nJqbQe2x2ufe7zCs9qjLlT5r6I8dlHetxRASPiaurovg50VZLCm5bk6pkvyEIC5AjPoixGfMFawVKH6WUfVUH8DFsYuPEbZXH0BYhR5MlKSMjmDSkg/YV5+sCtz9I1qK4SdzrNpj1hwW2Da0SgwFeyXnHHAVkeJ5UIA8uvnQSW3sxwmTFIhRNW2VUlZ5UhnVjanFHyCec5P2VpO+nCHHsWl5mp9urzNntw2TIets3lcccbAyotOIAyQOoSU9R3HOAai1ff0deoZ112uvdhnSFyGbTcEiMHDzdm06jPZjP5vMlRx+kaCku3lpi37X+nbHOLgi3G6xoj5bVhQQ46lCsHrg4Jq3O43B3ZF32wW/RNxuEGG96w7d51wcD6WGkdnyhCUpTlZKlYBI6AnPSq56etjVk4oLdZmEhLUDWrUVAA7ktzQkD4CrXekU1Nc7TtpZbDAkuR2bzOWJhQoguNtIB7M/olS0kj9EUGsXrh44e7Ppi4uncRyXdIsN1xCV32InmdSgkDkCc9SB0yT9NQTw37H3neK8yw1NTarJb+X1ycpsrPMrOG209ApRAyckBI6nvAMSV0M4LEM6b4VXNQMtJU665PuDox76myUDP2MgUGJlcN3Dlo1LTGrtTFp9QBBu9+ailf1AcnSkfhp4d9ZsvNaO1Otx5AJKrTfGpfIf0gefp3eX11RS83KfebtKut0luy50t1Tz77quZTi1HJJNfbTV6uWnb/BvtolORZ8F9L7DqFEFKknPwPcR4gkUEg8RWzF62e1JGhzJaLlap6VLgT0NlHPykcyFp68qxkHAJBBBB7wN64N9ltH7tQtTPapduiFWxyMlj1OQlsEOBwq5spVn3BU88fUOPeeHqDew2AuLco0lpWOoS4hSCnPkecfAVp/oz/7L11+vg/yv0HzsnC9tbpidNuW6Gs27bDdnyU2uBJuTMQerJdUlouOKwVqKAlR5eXGa2628O3DXq/tY+lbw1LebTlfyRqFMlaB5kZXj7RVReJa+XC/b8ayk3GQ48qNd5MJkKVkNssuKbQkDwGE93mSfGtf2tvc/Tm4+nr1bZDjEmLcWFhSFEEp5wFJPmFJJBHiCRQblxL7OTdntYMQUy13CzXFtTtulrSErUEkBbawOnOnKckdCFA9MkDxcPu0N73f1Y7abdJRAgQ20u3Ce4grDKScJSEjHMtWDgZHuqOelWl9JJGaXtlpqYUjtWryWknxCVsrJH+xPwr1ejltjMbZ+93ZLYMmZeltqVjqUNst8oz9a1/Gg8E3h44bdDdlD1rrBQnKQFFFxvTcdavpDaAlQT8frr8hcP3DRrh1cDRusD6/ylSWrbfG33Bgd/ZrCiUjxx8ahrU/DTv8Aaj1FcL9drJFkTp8hch9xd1YJKlHP+PuHcB4AAV/OneGXfqw36BerbY4zEyDIRIZcRdWAUqSoEdef6KDTOIrZ277PasYtsuWm42uehTtvnJRydqEkBSFJycLTlOcEjCknxwLZ8F+gNt7LarTq+w371rVdxsQTcYXyi052SVqbUs9kkcyMKSgdT0zjxrz+kct7T+z1kuRQO3i3xDaVeSHGXeYfFCPhUOejl/Ljdv4cf/ERqCwG8uzux+rtwZ191pq/5Nvb6Gkvx/lqPH5QltKU+wsFQykA/TVJN/tOaX0nutdrDoy4/KNjjJYMaR6yiRzlTKFL9tA5ThSlDp3YxW6cc/zlNQfqIf4ZuoPoFKUoFKUoFKUoJ71I0vUnBTpSZbwXjpG/SolwQnvaRIUpxLhH+HK0Jz5q+uoFAJIAGSakTY3dGXttepqJFuZvWnLwz6rebS/7klrr1GegWnKsEgjBI8ciTrJobh8vmrbXqbTO6zenrc1MakybHfopDjYSsKU0l0qCSMAjvX/mNBcDhy2+j7bbS2jT4ZCLg42JVzXjquS4AV5/y9ED6ECpFrQP6a9o/wDuPpn/ANg3/wDa+MvfPaCMwp5zcXTykpGSGpYcV9iU5J+FBIbi0NNqccWlCEAqUpRwAB3kmuRO5N3Y1BuLqW/Rjli5XeVLbOMey48pY/0NWZ4neKmJqOxzNG7b+sJgTGyzOuzzZbU60RhTbKD7SQodCpQBwSAB31Uag6Jej6+b+P3vJ+5Fc9Z6im5SFJJCg8ogg9R7Rq53BnvDttojZsWTVWqY1suHyk+92DjLqjyKCMHKUkdcHxql81aXJr60HKVOKIPmM0F4OEjiEjawgtba7jvtPXNxsx4UyVhSLi2RjsXc9C5joCffHQ+170T8W/DzI28mu6u0lHdf0lIcy60MqVbVqPRKvEtE9EqPd7p64Kq5oWptaVoUpK0nKVA4IPmKuvw7cT+nrpo9/SW8c1pDrMcspuElhTzc9kjlLbyUg5Xg9SRhQ7+ueYIc4EpzUTiOtDLiuUy4kphH0q7JS8f7DWzekYtMqNvDaLuplYiTrMhtt3Hslxt1znTnzAW2f/IVoO5ytGbf7rW7WGzWrY10gtShMjRih0LguJUCWlc6RztnuBznGQfNVorbxB7CbraYZtu4sSNb3wQtcK6xVOtocxgqaeQkgd5HMeRWD3UHP+r2ejdtEuLt7qW8vMrRHn3JtphShjn7Jv2iPMZcxnzBHhXv+SODOMlMrtdIqA6gevvOH7Uc5+6sJvFxRaD05oV3SOzzKXZKmDGjyI8QxokBBBypCVBJUsZOMJ5cnJJxghXC3zmrpxYx7mwrmal66S+hXmlc8KB+BqxXpLf7vaK/a5f8jdVH2wuEO07l6XulwfDEOHeYkiQ6QSENoeQpSsDr0AJ6VYjjr3O0JuBZdLMaP1CxdnIUiQuQltpxHZhSUBJ9tI78Hu8qCqldDeDYC/8ACYqyxlBTwNxgkE9y3CpQHwdT8a55VPPCXvy3tJPnWm+w5MzTlycS656vguxXgOXtEpOAoEABQyD7II7sEILlR34kp2LJaWy+ystutrThSFA4II8CCK/u2wpVyuMa3QWFyJcp1LLDSBlTi1EBKQPMkgVf2633hE3BuC73d5GmVz5B53nZCHoTq1eJX7nMfpOfrr9tOpuEnbicL3Y5GnG7gwCWXYjb015Jxj2DhfKT3ZBHf30H046nG7Nw0MWpxY53Z0OIjH5xQlSz/o2a0r0Z/wDZeuv18H+V+oX4q98nN3r9Ei2uI9B03ayoxGnsdq+4rop1YBIHQYCcnAz164G9cCW5mhtvrfq1vWOoGLSuc7EVGDjTi+0CA7zY5Enu5k9/nQQVvp+W3Xf8SXD8S5Wv6X/vNa/2xn+cVld2rlCvO6urrvbJCZEGdfJsmM8kEBxtb61JUAeoyCD1rDWB5qNfrfIeWENNSm1rUfBIUCTQXo9JD+STT/7+T+Her0ejomtv7K3eCleHo19dJHklbLJSfiFfCtB44t19vde7cWa2aR1LHusyPd0vutNsuJKW+xdTzZUkDvUB9tRHwsb1L2f1TMXPhvz7DdEIROZZI7RtSCeR1APQkBShykjIPf0FBl7lxR77W64ybfMv0RmTFeWy82q1sAoWkkKB9jwINfJnir3xeeQyzqCI444oJQlNrYJUT0AHsVYS+3vhC3Plqvd9k2VFykAF518yLe8VY/PKeQLUO7OVfXX5YXuDzb+a1d7bN085OiK7Rp4vSLgtKx1Ckg84Ch4EAYPWgirishcQELbaKvdK/aem2Ry6NIaagoSHO37NwpPRtPTlC/Hyrxejl/Ljdv4cf/ERqwnFxvxH3anwLPp+JIi6dtjinULkAB2U8Ry9oUgnlSBkJGc+0Se/A03hr3Ka2q3TiamlxXZVucZXEnNs47Qsrwcpz0JCkpVg4zjGRnNBs/HQCOJO/kggGPDI+n/h26jDQulX9UXBbSXjHjNKbQ44EhSlOOrDbTSElSQpa1KAAKkgAKJICSavDq/cHhN3Eej3nVcy1TJoaCA5IhymX0pGcIUUJBOMnvJHlVa9Vaj24sm9N4Y0Y40zo5ci3Tbc+yh1bbMqMlCwpaVf1imypTyFY6jn5gFcoSoNa1jtqm225Uu3OuJdS0+6hlU+HNRISxyl/keiuLSHG0rStTagCE5Vk91RrUu6j1uwnTwE6+2u93Zn5Sat4tkZxptpuc0hp0ulbTYIShLnKEgqKncqKeQJMRUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUClKUH/9k=" alt="Koronet">
+    <div class="topbar-divider"></div>
+    <div>
+      <h1>Flores de Los Lagos</h1>
+      <p>Komet Core · Sales rep: Felipe Mesa · Implementer: George Velez</p>
+    </div>
+  </div>
+  <span class="badge">Kickoff and Preparation</span>
+</div>
+
+<!-- STATS ROW -->
+<div class="stats">
+  <div class="stat">
+    <div class="label">Contract start</div>
+    <div class="val">—</div>
+    <div class="sub">&nbsp;</div>
+  </div>
+  <div class="stat">
+    <div class="label">Kickoff</div>
+    <div class="val">—</div>
+    <div class="sub">&nbsp;</div>
+  </div>
+  <div class="stat">
+    <div class="label">Est. go live</div>
+    <div class="val">—</div>
+    <div class="sub">&nbsp;</div>
+  </div>
+  <div class="stat">
+    <div class="label">Completion</div>
+    <div class="val">0%</div>
+  </div>
+  <div class="stat">
+    <div class="label">Recordings</div>
+    <div class="val">—</div>
+    <div class="sub">via Fathom</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab active" onclick="showTab('p-ci',this)">Customer info</button>
+  <div class="tab-sep"></div>
+  <button class="tab" onclick="showTab('p-ko',this)">Kickoff</button>
+  <div class="tab-sep"></div>
+  <button class="tab" onclick="showTab('p-tr',this)">Training</button>
+  <div class="tab-sep"></div>
+  <button class="tab" onclick="showTab('p-pg',this)">Pre go live</button>
+</div>
+
+<!-- ========== CUSTOMER INFO ========== -->
+<div id="p-ci" class="panel active">
+  <p class="sl" style="margin-top:0">ORA — Operational Readiness Assessment</p>
+
+  <div class="two">
+    <div class="ic">
+      <h3>Business overview</h3>
+      <div class="mr"><span class="ml">Currency</span><span class="mv">USD - U.S. Dollar</span></div>
+      <div class="mr"><span class="ml">Assessment Status</span><span class="mv">Completed</span></div>
+      <div class="mr"><span class="ml">Is the Company registered as an LLC?</span><span class="mv">No</span></div>
+      <div class="mr"><span class="ml">Annual GMV</span><span class="mv">USD 500,000.00</span></div>
+      <div class="mr"><span class="ml">Estimated Number of Active Clients</span><span class="mv">4</span></div>
+      <div class="mr"><span class="ml">Currently Sells to Clients</span><span class="mv">Yes</span></div>
+      <div class="mr"><span class="ml">Client Types</span><span class="mv">Importer;Wholesaler</span></div>
+      <div class="mr"><span class="ml">Primary Sales Channels</span><span class="mv">Open Market;Phone</span></div>
+      <div class="mr"><span class="ml">Company Team Size</span><span class="mv">3</span></div>
+      <div class="mr"><span class="ml">Buys from Origin</span><span class="mv">Yes</span></div>
+    </div>
+    <div class="ic">
+      <h3>GMV breakdown</h3>
+      <div class="mr"><span class="ml">GMV &ndash; Standing Orders (%)</span><span class="mv">0%</span></div>
+      <div class="mr"><span class="ml">GMV &ndash; Open Market (%)</span><span class="mv">100%</span></div>
+      <div class="mr"><span class="ml">GMV &ndash; Cash &amp; Carry (%)</span><span class="mv">0%</span></div>
+      <div class="mr"><span class="ml">GMV &ndash; Online Sales (%)</span><span class="mv">0%</span></div>
+      <div class="mr"><span class="ml">Online Sales Annual Details</span><span class="mv">New Importer account - capacity to sell 1.5 million stems Peonies - 10% Anemonies - 1 million stems Ranuncoulus - 200k stems</span></div>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="ic">
+      <h3>Payments</h3>
+      <div class="mr"><span class="ml">Clients Accept Card Payments</span><span class="mv">No</span></div>
+      <div class="mr"><span class="ml">Payment Volume via Cards (%)</span><span class="mv">No info</span></div>
+      <div class="mr"><span class="ml">Payment Volume via ACH (%)</span><span class="mv">0%</span></div>
+      <div class="mr"><span class="ml">Payment Volume via Checks (%)</span><span class="mv">0%</span></div>
+      <div class="mr"><span class="ml">Payments in Credit Card</span><span class="mv">No</span></div>
+      <div class="mr"><span class="ml">Payments via POS Machine (%)</span><span class="mv">0%</span></div>
+    </div>
+    <div class="ic">
+      <h3>Logistics &amp; systems</h3>
+      <div class="mr"><span class="ml">Has Handler Partner</span><span class="mv">Yes</span></div>
+      <div class="mr"><span class="ml">Handler Partner Name</span><span class="mv">Yes- finalizing contract either Kuehne + Nagel Inc or Logiztic Aliliance</span></div>
+      <div class="mr"><span class="ml">Has Logistics Partner</span><span class="mv">Yes</span></div>
+      <div class="mr"><span class="ml">Logistics Partner Name</span><span class="mv">Kuehne + Nagel Inc</span></div>
+      <div class="mr"><span class="ml">Has an Active FedEx Account</span><span class="mv">No</span></div>
+      <div class="mr"><span class="ml">Requires Accounting System Integration</span><span class="mv">No</span></div>
+      <div class="mr"><span class="ml">Requires API Integration</span><span class="mv">No</span></div>
+    </div>
+  </div>
+
+  <p class="sl">Success Form</p>
+  <div class="two">
+    <div class="ic">
+      <h3>Client team</h3>
+      <div class="mr"><span class="ml">Executive Sponsor</span><span class="mv">Enrique Covarrubias</span></div>
+      <div class="mr"><span class="ml">Project Champion</span><span class="mv">Daniel Miranda</span></div>
+      <div class="mr"><span class="ml">eCommerce / Sales Lead</span><span class="mv">Daniel Miranda</span></div>
+      <div class="mr"><span class="ml">Finance Lead</span><span class="mv">Daniel Miranda</span></div>
+      <div class="mr"><span class="ml">Procurement Lead</span><span class="mv">Daniel Miranda</span></div>
+      <div class="mr"><span class="ml">Inventory Lead</span><span class="mv">Daniel Miranda</span></div>
+      <div class="mr"><span class="ml">Warehouse Operations</span><span class="mv">Daniel Miranda</span></div>
+      <div class="mr"><span class="ml">IT / Systems Lead</span><span class="mv">Daniel Miranda</span></div>
+    </div>
+    <div class="ic">
+      <h3>Business details</h3>
+      <div class="mr"><span class="ml">How many customers do you serve on a regular basis?</span><span class="mv">10-20</span></div>
+      <div class="mr"><span class="ml">Do you sell your products in boxes or units, or both?</span><span class="mv">Both</span></div>
+      <div class="mr"><span class="ml">Do you have walk-in customers?</span><span class="mv">No</span></div>
+      <div class="mr"><span class="ml">What are the key divisions or departments you oversee in your warehouse?</span><span class="mv">Not a wholesaler</span></div>
+      <div class="mr"><span class="ml">What payment methods do your customers typically use? What percentage pay by credit card versus ACH?</span><span class="mv">No stats yet</span></div>
+      <div class="mr"><span class="ml">Do you have an online sales channel? If so, what are your sales targets for this channel?</span><span class="mv">Not online yet</span></div>
+      <div class="mr"><span class="ml">How many sales representatives does your company employ?</span><span class="mv">3</span></div>
+      <div class="mr"><span class="ml">How many vendors are you currently working with?</span><span class="mv">No stats yet</span></div>
+      <div class="mr"><span class="ml">Do your farms use Komet Sales?</span><span class="mv">Yes</span></div>
+      <div class="mr"><span class="ml">What shipping methods do you use?</span><span class="mv">Airborne</span></div>
+      <div class="mr"><span class="ml">Will you be selling directly from vendors, through your warehouse, or using an In &amp; Out model?</span><span class="mv">Primarly in &amp; our model</span></div>
+      <div class="mr"><span class="ml">How do you manage the receiving and shipping processes in your warehouse? Do you use scanning equipment?</span><span class="mv">No stats yet</span></div>
+      <div class="mr"><span class="ml">Do you work with a logistics handler? If so, which one?</span><span class="mv">Most likely kuehne nagel</span></div>
+      <div class="mr"><span class="ml">Which carrier do you use for shipping? Are you using Armellini, Florida Beauty, Prime, or another service?</span><span class="mv">No stats yet</span></div>
+      <div class="mr"><span class="ml">Are you using any external systems in addition to Komet? If so, which one(s)?</span><span class="mv">Yes, ERP and probably local inventory handler</span></div>
+      <div class="mr"><span class="ml">Finally, what is your main objective with Komet Sales?</span><span class="mv">Use a standard, all-in-one trading and operational platform for our flora business</span></div>
+    </div>
+  </div>
+
+  <p class="sl">KP Awareness</p>
+  <div class="ic" style="margin-bottom:18px">
+    <div class="mr"><span class="ml">Are you aware that, in order to go live, you must have at least 50% of your active clients&#x2019; payment methods collected within the platform?</span><span class="mv">Yes, I already have them identified.</span></div>
+    <div class="mr"><span class="ml">Have you already identified the clients who will migrate 10% of your volume to Smart Collections within the system?</span><span class="mv">Yes, I&#x2019;m aware and I&#x2019;ve already planned strategies to achieve this.</span></div>
+  </div>
+
+  <p class="sl">Implementation team</p>
+  <div class="ic">
+    <div class="mr"><span class="ml">Implementer</span><span class="mv">George Velez</span></div>
+    <div class="mr"><span class="ml">Sales rep</span><span class="mv">Felipe Mesa</span></div>
+  </div>
+</div>
+
+<!-- ========== KICKOFF (EMPTY) ========== -->
+<div id="p-ko" class="panel">
+  <div class="empty-state">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="10" width="36" height="28" rx="3" stroke="#b4b2a9" stroke-width="1.5"/>
+      <path d="M6 18h36" stroke="#b4b2a9" stroke-width="1.5"/>
+      <circle cx="12" cy="14" r="1.5" fill="#b4b2a9"/>
+      <circle cx="17" cy="14" r="1.5" fill="#b4b2a9"/>
+      <circle cx="22" cy="14" r="1.5" fill="#b4b2a9"/>
+    </svg>
+    <p>Kickoff information will be added after the kickoff session</p>
+  </div>
+</div>
+
+<!-- ========== TRAINING ========== -->
+<div id="p-tr" class="panel">
+
+  <!-- Workflow SVG -->
+  <p class="sl" style="margin-top:0">How your business flows in Komet · click any step</p>
+  <div class="workflow-wrap">
+    <div class="wsvg">
+      <svg viewBox="0 0 520 920" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="#b4b2a9"/>
+          </marker>
+        </defs>
+
+        <rect x="140" y="10" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="po"/>
+        <text x="260" y="32" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Purchase Order</text>
+        <text x="260" y="47" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">Future sales</text>
+        <line x1="260" y1="60" x2="260" y2="80" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <rect x="140" y="80" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="confirmed"/>
+        <text x="260" y="102" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">PO Confirmed</text>
+        <text x="260" y="117" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">Future inventory visible</text>
+        <line x1="260" y1="130" x2="260" y2="150" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <rect x="175" y="150" width="170" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="sales"/>
+        <text x="260" y="177" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Sales</text>
+
+        <text x="260" y="210" text-anchor="middle" font-size="10" fill="#93928b" pointer-events="none">order channel?</text>
+        <line x1="220" y1="195" x2="140" y2="230" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="300" y1="195" x2="380" y2="230" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
+
+        <rect x="30" y="230" width="160" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="ecom"/>
+        <text x="110" y="249" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">eCommerce</text>
+        <text x="110" y="264" text-anchor="middle" font-size="9" fill="#73726c" pointer-events="none">Online checkout</text>
+
+        <rect x="330" y="230" width="160" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="k2k"/>
+        <text x="410" y="257" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">K2K order</text>
+
+        <line x1="110" y1="275" x2="110" y2="295" stroke="#b4b2a9" stroke-width="1" marker-end="url(#arr)"/>
+        <rect x="30" y="295" width="160" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="checkout"/>
+        <text x="110" y="314" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">Checkout payment</text>
+        <text x="110" y="329" text-anchor="middle" font-size="9" fill="#73726c" pointer-events="none">Pay now or schedule</text>
+
+        <line x1="110" y1="340" x2="260" y2="370" stroke="#b4b2a9" stroke-width="1"/>
+        <line x1="410" y1="275" x2="260" y2="370" stroke="#b4b2a9" stroke-width="1"/>
+
+        <rect x="140" y="370" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="staging"/>
+        <text x="260" y="392" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Staging Area</text>
+        <text x="260" y="407" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">Confirm or scan boxes</text>
+
+        <text x="260" y="438" text-anchor="middle" font-size="10" fill="#93928b" pointer-events="none">linked to customer?</text>
+        <line x1="200" y1="420" x2="120" y2="455" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
+        <line x1="320" y1="420" x2="400" y2="455" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="4"/>
+        <text x="120" y="450" text-anchor="middle" font-size="9" fill="#93928b" pointer-events="none">Yes</text>
+
+        <rect x="30" y="455" width="180" height="40" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="invoice"/>
+        <text x="120" y="479" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">Invoice generated</text>
+
+        <rect x="310" y="455" width="180" height="40" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="openmarket"/>
+        <text x="400" y="472" text-anchor="middle" font-size="11" font-weight="500" fill="#1a1a18" pointer-events="none">Open Market</text>
+        <text x="400" y="486" text-anchor="middle" font-size="9" fill="#93928b" pointer-events="none">Order Entry</text>
+
+        <line x1="120" y1="495" x2="260" y2="525" stroke="#b4b2a9" stroke-width="1"/>
+        <line x1="400" y1="495" x2="260" y2="525" stroke="#b4b2a9" stroke-width="1"/>
+
+        <rect x="140" y="525" width="240" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="shipping"/>
+        <text x="260" y="554" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Shipping out</text>
+        <line x1="260" y1="575" x2="260" y2="600" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <text x="260" y="615" text-anchor="middle" font-size="10" font-weight="600" fill="#73726c" letter-spacing=".5" pointer-events="none">PAYMENT COLLECTION</text>
+
+        <rect x="140" y="625" width="240" height="45" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="receive"/>
+        <text x="260" y="652" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Receive Payment</text>
+        <line x1="260" y1="670" x2="260" y2="690" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <rect x="110" y="690" width="300" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="statements"/>
+        <text x="260" y="718" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Invoices &amp; Statements</text>
+        <line x1="260" y1="740" x2="260" y2="760" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <text x="260" y="787" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Payment links</text>
+        <line x1="260" y1="805" x2="260" y2="830" stroke="#b4b2a9" stroke-width="1.2" marker-end="url(#arr)"/>
+
+        <rect x="120" y="830" width="280" height="50" rx="8" fill="#fff" stroke="#b4b2a9" stroke-width="1" cursor="pointer" class="wnode" data-step="recon"/>
+        <text x="260" y="852" text-anchor="middle" font-size="12" font-weight="500" fill="#1a1a18" pointer-events="none">Reconciliation</text>
+        <text x="260" y="868" text-anchor="middle" font-size="10" fill="#73726c" pointer-events="none">A/P · A/R · Payouts</text>
+      </svg>
+    </div>
+    <div class="wdetail" id="wdetail">
+      <span class="wempty">Click any step in the workflow to see training sessions linked to that part of your business.</span>
+    </div>
+  </div>
+
+  <!-- Project phases -->
+  <p class="sl">Project phases</p>
+  <div class="phases">
+    <div class="ph"><span class="ph-name">Sales Handover</span><div class="ph-bar"><div class="ph-fill" style="width:0%"></div></div><span class="ph-pct">0%</span></div>
+    <div class="ph"><span class="ph-name">Account Configuration</span><div class="ph-bar"><div class="ph-fill" style="width:0%"></div></div><span class="ph-pct">0%</span></div>
+    <div class="ph"><span class="ph-name">Kickoff</span><div class="ph-bar"><div class="ph-fill" style="width:0%"></div></div><span class="ph-pct">0%</span></div>
+    <div class="ph"><span class="ph-name">Training</span><div class="ph-bar"><div class="ph-fill" style="width:0%"></div></div><span class="ph-pct">0%</span></div>
+    <div class="ph"><span class="ph-name">Pre Go Live</span><div class="ph-bar"><div class="ph-fill" style="width:0%"></div></div><span class="ph-pct">0%</span></div>
+    <div class="ph"><span class="ph-name">Post Go Live</span><div class="ph-bar"><div class="ph-fill" style="width:0%"></div></div><span class="ph-pct">0%</span></div>
+  </div>
+
+  <!-- Training path -->
+  <p class="sl">Training path</p>
+  <div style="border:.5px solid #e0ded6;border-radius:10px;overflow:hidden;margin-bottom:22px">
+    <div class="tk"><span class="tk-n">Komet general tour</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to create customers, vendors, carriers, products, hardgoods &amp; box dimensions manually</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Customers: How to collect customer payment methods</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to create a Standalone PO Future Sales (Manual, using Templates and Data import)</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Standalone PO: Approve, Confirm, Partial Confirmation and Postpone Shipments</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Grower Portal / Grower Menu: Confirm PO's</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Grower Portal / Grower Menu: Add products to an AWB and print labels</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Tracking: How to track inbound shipments</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Pricing: GPM, AWB Freight, Handling and other charges</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to Manage Future Inventory</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to create eCommerce orders &amp; How to get Paid: Pay Now and Schedule Payment</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Manual Prebooks - Future Sales and allocation if applicable</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Prebook Summary: How to fulfill Prebook Orders Standard &amp; Fulfillment Guide</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Staging Area: Arrival date, manual confirmation, box scanning &amp; batch labels</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Order Entry: Invoice confirmation and Print Documents</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Shipping: Outbound shipments / Picking items using bunch labels</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to sell Open Market - eCommerce orders and Manual Orders</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to Get Paid: Pay &amp; Confirm / POS machine</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to Get Paid: Invoice Payment Links</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">AR: Payment History (Refunds, Chargebacks)</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Payouts and settlement report</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Full Flow Practice &amp; Practice edge cases (eg, Cancelations)</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">eCommerce Settings, eCommerce Carrousel and How to create or invite eCommerce users</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">E-commerce: Identify top eCommerce candidates for the go live</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to create a Standalone PO for Hardgoods</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Inventory Hardgoods receiving</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Hardgoods invoicing</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Hardgoods full Flow Practice &amp; Practice edge cases (eg, Cancelations)</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">K2K Connections: How to send and accept connection requests, browse vendor inventory and check availability</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">K2K Connections: How to sell K2K inventory and fulfill K2K orders end to end</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Set up always on Buyer / Vendor Connections</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Full Flow Practice &amp; Practice edge cases (eg, Cancelations)</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to generate Statements and use payment links</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Order Entry: Customer Credits</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">QC: Inspections and Vendor Credits</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">How to create Customer and Vendor Standing Order's</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">A/P - PO Reconciliation, AWB and Inbound Truck Freight Reconciliation</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Reports overview</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Koronet Payments full training — Prepaid, Scheduled Payments, Payment Links, Order Entry &amp; AR Collection</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Instruct client to inform their buyers about upcoming eCommerce user creation</span><span class="sp sp-not">Not started</span></div>
+    <div class="tk"><span class="tk-n">Practice end-to-end eCommerce flow — user invitation (email, QR code &amp; link), deep links, tags and filters</span><span class="sp sp-not">Not started</span></div>
+  </div>
+
+  <!-- Session recordings -->
+  <p class="sl">Session recordings · via Fathom</p>
+  <div class="no-data">No recordings yet</div>
+
+  <!-- Data required from client -->
+  <p class="sl">Data required from client</p>
+  <div class="rc"><div class="rt">Customers</div><div class="rm">Excel template</div><a href="./data/templates/Customers.xls" target="_blank">Download ↓</a></div>
+  <div class="rc"><div class="rt">Products</div><div class="rm">Excel template</div><a href="./data/templates/Products.xls" target="_blank">Download ↓</a></div>
+  <div class="rc"><div class="rt">Hard Goods</div><div class="rm">Excel template</div><a href="./data/templates/Hard_Goods.xls" target="_blank">Download ↓</a></div>
+  <div class="rc"><div class="rt">Box Dimension</div><div class="rm">Excel template</div><a href="./data/templates/Box_Dimension.xls" target="_blank">Download ↓</a></div>
+  <div class="rc"><div class="rt">Carrier</div><div class="rm">Excel template</div><a href="./data/templates/Carrier.xls" target="_blank">Download ↓</a></div>
+  <div class="rc"><div class="rt">Day of Service</div><div class="rm">Excel template</div><a href="./data/templates/Day_of_Service.xls" target="_blank">Download ↓</a></div>
+
+  <!-- Email templates -->
+  <p class="sl">Email templates</p>
+  <div class="tb">
+    <div class="th">
+      <span>💳 Payment method request · Send in Week 2</span>
+      <button class="cb" onclick="copyTemplate(0)">Copy template</button>
+    </div>
+    <div class="tt">Dear [Client's Name],<br><br>Exciting news! We're partnering with Koronet Payments to bring you a more seamless payment experience. To ensure a smooth transition, we kindly ask you to save your preferred payment method in our new system.<br><br>Please click the link below to securely add your payment details:<br>[Payment Link]<br><br>This will allow for faster checkout and hassle-free transactions moving forward. If you have any questions, don't hesitate to reach out.<br><br>Thank you for your continued partnership!<br><br>Best regards,<br>[Your Name]<br>[Company Name]</div>
+  </div>
+  <div class="tb">
+    <div class="th">
+      <span>🛒 eCommerce invitation · Send in Week 5</span>
+      <button class="cb" onclick="copyTemplate(1)">Copy template</button>
+    </div>
+    <div class="tt">Dear [Client's Name],<br><br>We're excited to share that your online store is now ready! You can now browse our full inventory, place orders, and manage everything from one convenient platform.<br><br>Click below to create your account and start exploring:<br>[eCommerce Link]<br><br>If you need any help getting started, we're here for you.<br><br>Welcome aboard!<br><br>Best regards,<br>[Your Name]<br>[Company Name]</div>
+  </div>
+
+  <!-- Koronet University (moved down — already accessible from Komet Sales) -->
+  <p class="sl">Koronet University</p>
+  <div class="ku">
+    <h3>Komet Core</h3>
+    <div class="ku-sub">Self-paced course · Complete at your own speed between sessions</div>
+    <a href="https://koronet.learnworlds.com/course/komet-wholesale" target="_blank">Open course ↗</a>
+  </div>
+</div>
+
+<!-- ========== PRE GO LIVE ========== -->
+<div id="p-pg" class="panel">
+  <p class="sl" style="margin-top:0">Pre go live milestones</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px">
+    <div class="pg-card">
+      <h3>Payment methods saved</h3>
+      <div class="pg-val">—</div>
+      <div class="pg-sub">of active buyers</div>
+      <div style="font-size:11px;color:#1a1a18;font-weight:500;margin-top:8px;padding-top:8px;border-top:.5px solid #e0ded6">🎯 Target: 50%</div>
+      <a href="https://koronet.com/koronetpayments-pricing" target="_blank">Koronet Payment fees</a>
+    </div>
+    <div class="pg-card">
+      <h3>eCommerce users</h3>
+      <div class="pg-val">—</div>
+      <div class="pg-sub">created before go live</div>
+      <div style="font-size:11px;color:#1a1a18;font-weight:500;margin-top:8px;padding-top:8px;border-top:.5px solid #e0ded6">🎯 Target: 10 users</div>
+    </div>
+    <div class="pg-card">
+      <h3>K2K connections</h3>
+      <div class="pg-val">—</div>
+      <div class="pg-sub">active connections</div>
+      <div style="font-size:11px;color:#1a1a18;font-weight:500;margin-top:8px;padding-top:8px;border-top:.5px solid #e0ded6">🎯 Target: 5 connections</div>
+    </div>
+  </div>
+  <p class="no-data">Progress will update as the implementation advances. Confirm targets with client once scope is finalized.</p>
+</div>
+
+</div><!-- /hub -->
+
+<script>
+// Password verification
+async function checkPw() {
+  const input = document.getElementById('pwInput').value;
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  if (hashHex === 'c3ba49ca6fab9c594b4b316b7ed4a60d5422532f99c692b5e1255a5d0329e265') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('hubContent').style.display = 'block';
+    document.body.style.background = '#f8f7f4';
+  } else {
+    document.getElementById('pwError').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function copyTemplate(idx) {
+  const templates = document.querySelectorAll('.tb .tt');
+  const text = templates[idx].innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btns = document.querySelectorAll('.tb .cb');
+    btns[idx].textContent = '✓ Copied';
+    setTimeout(() => btns[idx].textContent = 'Copy template', 2000);
+  });
+}
+
+// Workflow click interaction
+const wfMap = {
+  po: {
+    title: 'Purchase Order',
+    sub: 'Future sales',
+    items: ['How to create a Standalone PO Future Sales (Manual, using Templates and Data import)']
+  },
+  confirmed: {
+    title: 'PO Confirmed',
+    sub: 'Future inventory visible',
+    items: ["How to confirm PO's", "How Growers can confirm PO's"]
+  },
+  sales: {
+    title: 'Sales',
+    sub: 'Order channels',
+    items: ['How to sell']
+  },
+  ecom: {
+    title: 'eCommerce',
+    sub: 'Online checkout',
+    items: ['How to fulfill eCommerce orders']
+  },
+  k2k: {
+    title: 'K2K order',
+    sub: 'Vendor-to-vendor connections',
+    items: ['How to fulfill K2K orders']
+  },
+  checkout: {
+    title: 'Checkout payment',
+    sub: 'Pay now or schedule',
+    items: ['How to Pay Now or schedule payment']
+  },
+  staging: {
+    title: 'Staging Area',
+    sub: 'Confirm or scan boxes',
+    items: ['How to add arrival date and confirm items manually or with scanner']
+  },
+  invoice: {
+    title: 'Invoice generated',
+    sub: 'Order confirmation',
+    items: ['Order Entry: Invoice confirmation and Print Documents', 'Order Entry: Customer Credits']
+  },
+  openmarket: {
+    title: 'Open Market',
+    sub: 'Order Entry',
+    items: ['How to sell Open Market - eCommerce orders and Manual Orders']
+  },
+  shipping: {
+    title: 'Shipping out',
+    sub: 'Outbound shipments',
+    items: ['How to print shipping documents']
+  },
+  receive: {
+    title: 'Receive Payment',
+    sub: 'Payment collection',
+    items: ['How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments']
+  },
+  statements: {
+    title: 'Invoices & Statements',
+    sub: '',
+    items: ['How to generate Statements and use payment links', 'How to generate invoices with payment links']
+  },
+  stpay: {
+    title: 'Payment links',
+    sub: '',
+    items: ['How to send payment links']
+  },
+  recon: {
+    title: 'Reconciliation',
+    sub: 'A/P · A/R · Payouts',
+    items: ['A/P - PO Reconciliation, AWB and Inbound Truck Freight Reconciliation', 'Payouts and settlement report', 'Reports overview']
+  }
+};
+
+document.querySelectorAll('.wnode').forEach(node => {
+  node.addEventListener('click', () => {
+    const step = node.dataset.step;
+    const data = wfMap[step];
+    if (!data) return;
+    const detail = document.getElementById('wdetail');
+
+    // Highlight active node
+    document.querySelectorAll('.wnode').forEach(n => {
+      const rect = n.tagName === 'rect' ? n : n.querySelector('rect');
+      n.classList.remove('wnode-active');
+    });
+
+    let html = '<div class="wd-title">' + data.title + '</div>';
+    if (data.sub) html += '<div class="wd-sub">' + data.sub + '</div>';
+    data.items.forEach(item => {
+      html += '<div class="wd-item"><span class="wd-dot"></span>' + item + '</div>';
+    });
+    detail.innerHTML = html;
+  });
+});
+</script>
+
+<!-- Live data bootstrap — see lartisan-client.html for full comments -->
+<script>
+(function () {
+  const HUB = 'ifg';
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  async function loadJson(path) {
+    try { const r = await fetch(path, {cache: 'no-store'}); return r.ok ? r.json() : null; }
+    catch { return null; }
+  }
+  function renderPhases(pmt) {
+    const el = document.querySelector('.phases');
+    if (!el || !Array.isArray(pmt.phases)) return;
+    el.innerHTML = pmt.phases.map((p) => `
+      <div class="ph">
+        <span class="ph-name">${esc(p.name || p.label)}</span>
+        <div class="ph-bar"><div class="ph-fill" style="width:${p.completion_pct ?? p.pct ?? 0}%"></div></div>
+        <span class="ph-pct">${p.completion_pct ?? p.pct ?? 0}%</span>
+      </div>
+    `).join('');
+  }
+  function fmtDate(iso) {
+    if (!iso) return null;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    const d = m ? new Date(+m[1], +m[2]-1, +m[3]) : new Date(iso);
+    if (isNaN(d)) return null;
+    return { short: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), year: String(d.getFullYear()) };
+  }
+  function updateStat(label, val, sub) {
+    const stat = Array.from(document.querySelectorAll('.stat')).find((s) =>
+      s.querySelector('.label')?.textContent.trim() === label
+    );
+    if (!stat) return;
+    if (val != null) { const v = stat.querySelector('.val'); if (v) v.textContent = val; }
+    if (sub != null) { const s = stat.querySelector('.sub'); if (s) s.textContent = sub; }
+  }
+  function renderStats(pmt, recs) {
+    if (pmt) {
+      const start = fmtDate(pmt.dates?.start);
+      if (start) updateStat('Contract start', start.short, start.year);
+      const ko = fmtDate(pmt.dates?.kickoff);
+      if (ko) updateStat('Kickoff', ko.short, ko.year);
+      const gl = fmtDate(pmt.dates?.estimated_go_live);
+      if (gl) updateStat('Est. go live', gl.short, gl.year);
+      const pct = pmt.overall?.completion_pct;
+      if (pct != null) updateStat('Completion', `${pct}%`);
+      const status = pmt.overall?.status;
+      if (status) {
+        const badge = document.querySelector('.badge');
+        if (badge) badge.textContent = status;
+      }
+    }
+    if (recs && Array.isArray(recs.recordings)) {
+      updateStat('Recordings', String(recs.recordings.length), 'via Fathom');
+    }
+  }
+  function renderStatuses(st) {
+    const firstTk = document.querySelector('.tk');
+    if (!firstTk || !Array.isArray(st.statuses)) return;
+    const container = firstTk.parentElement;
+    container.innerHTML = st.statuses.map((t) => {
+      const cls = t.status === 'done' ? 'sp-done' : t.status === 'partial' ? 'sp-partial' : 'sp-not';
+      const label = t.status === 'done' ? '✓ Done' : t.status === 'partial' ? '~ Partial' : 'Not started';
+      return `<div class="tk"><span class="tk-n">${esc(t.text)}</span><span class="sp ${cls}">${label}</span></div>`;
+    }).join('');
+  }
+  function renderRecordings(r) {
+    const header = Array.from(document.querySelectorAll('.sl')).find((el) => /Session recordings/i.test(el.textContent));
+    if (!header || !Array.isArray(r.recordings)) return;
+    let next = header.nextElementSibling;
+    while (next && next.classList.contains('rc')) {
+      const rm = next; next = next.nextElementSibling; rm.remove();
+    }
+    const html = r.recordings.map((rec) => {
+      const dt = rec.date ? new Date(rec.date) : null;
+      const dateStr = dt && !isNaN(dt) ? dt.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : '';
+      const dur = rec.duration_minutes ? `${rec.duration_minutes} mins` : '';
+      const host = rec.host ? esc(rec.host) : '';
+      const meta = [dateStr, dur, host].filter(Boolean).join(' · ');
+      return `<div class="rc"><div class="rt">${esc(rec.title)}</div><div class="rm">${meta}</div><a href="${esc(rec.url)}" target="_blank">Ver grabación ↗</a></div>`;
+    }).join('');
+    header.insertAdjacentHTML('afterend', html);
+  }
+  function renderPreGoLive(pgl) {
+    if (!pgl || !pgl.metrics) return;
+    const cards = document.querySelectorAll('#p-pg .pg-card');
+    const m = pgl.metrics;
+    const setCard = (idx, metric) => {
+      if (!cards[idx] || !metric) return;
+      const valEl = cards[idx].querySelector('.pg-val');
+      if (!valEl) return;
+      if (metric.pct != null) valEl.textContent = `${metric.pct}%`;
+      else if (metric.value != null) valEl.textContent = String(metric.value);
+      else valEl.textContent = '—';
+    };
+    setCard(0, m.payment_methods_saved);
+    setCard(1, m.ecommerce_users);
+    setCard(2, m.k2k_connections);
+  }
+
+  (async () => {
+    const [pmt, status, recs, overrides, pgl] = await Promise.all([
+      loadJson(`./data/${HUB}/pmt.json`),
+      loadJson(`./data/${HUB}/status.json`),
+      loadJson(`./data/${HUB}/recordings.json`),
+      loadJson(`./data/${HUB}/status_overrides.json`),
+      loadJson(`./data/${HUB}/pre_go_live.json`),
+    ]);
+    if (status && overrides && overrides.overrides) {
+      for (const s of status.statuses) {
+        const ov = overrides.overrides[String(s.id)];
+        if (ov) { s.status = ov; s.hits = 999; }
+      }
+    }
+    if (pmt) renderPhases(pmt);
+    if (status) renderStatuses(status);
+    if (recs) renderRecordings(recs);
+    if (pgl) renderPreGoLive(pgl);
+    renderStats(pmt, recs);
+  })();
+})();
+</script>
+
+</body>
+</html>

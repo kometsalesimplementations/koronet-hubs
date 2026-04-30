@@ -1,0 +1,4 @@
+{
+  "description": "Manual overrides on training topic statuses. Keys = topic id, values = done|partial|not_started",
+  "overrides": {}
+}

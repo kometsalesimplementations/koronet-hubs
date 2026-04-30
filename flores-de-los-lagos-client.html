@@ -530,7 +530,7 @@ async function checkPw() {
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  if (hashHex === 'c3ba49ca6fab9c594b4b316b7ed4a60d5422532f99c692b5e1255a5d0329e265') {
+  if (hashHex === 'b8be4f73437b92d67b6d34ae77b384bb1c091919019e3ab48a6882eb77a27527') {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('hubContent').style.display = 'block';
     document.body.style.background = '#f8f7f4';

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-29T17:11:40.760Z",
+  "updated_at": "2026-04-30T17:05:17.865Z",
   "statuses": [
     {
       "id": 1,
@@ -10,14 +10,14 @@
     {
       "id": 2,
       "text": "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 3,
       "text": "Customers: How to collect customer payment methods",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 4,
@@ -52,8 +52,8 @@
     {
       "id": 9,
       "text": "Pricing: GPM, AWB Freight, Handling and other charges",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 10,
@@ -64,8 +64,8 @@
     {
       "id": 11,
       "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 12,
@@ -100,8 +100,8 @@
     {
       "id": 17,
       "text": "How to sell Open Market - eCommerce orders and Manual Orders",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 18,
@@ -178,8 +178,8 @@
     {
       "id": 30,
       "text": "K2K Connections: How to send and accept connection requests, browse vendor inventory and check availability",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 31,
@@ -208,8 +208,8 @@
     {
       "id": 35,
       "text": "Order Entry: Customer Credits",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 36,

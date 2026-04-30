@@ -1,17 +1,17 @@
 {
-  "updated_at": "2026-04-29T17:11:40.756Z",
+  "updated_at": "2026-04-30T17:05:17.853Z",
   "statuses": [
     {
       "id": 1,
       "text": "Komet general tour",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 2,
       "text": "How to create customers, vendors, carriers, products, hardgoods & box dimensions manually",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 3,
@@ -22,8 +22,8 @@
     {
       "id": 4,
       "text": "How to create a Standalone PO Future Sales (Manual, using Templates and Data import)",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 5,
@@ -52,20 +52,20 @@
     {
       "id": 9,
       "text": "Pricing: GPM, AWB Freight, Handling and other charges",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 10,
       "text": "How to Manage Future Inventory",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 11,
       "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 12,
@@ -76,20 +76,20 @@
     {
       "id": 13,
       "text": "Prebook Summary: How to fulfill Prebook Orders Standard & Fulfillment Guide",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 14,
       "text": "Staging Area: Arrival date, manual confirmation, box scanning & batch labels",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 15,
       "text": "Order Entry: Invoice confirmation and Print Documents",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 16,
@@ -118,8 +118,8 @@
     {
       "id": 20,
       "text": "How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 21,
@@ -238,8 +238,8 @@
     {
       "id": 40,
       "text": "Koronet Payments full training — Prepaid, Scheduled Payments, Payment Links, Order Entry & AR Collection",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 41,

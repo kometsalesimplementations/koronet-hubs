@@ -1,4 +1,13 @@
 {
-  "updated_at": "2026-04-29T17:11:40.756Z",
-  "recordings": []
+  "updated_at": "2026-04-30T17:05:17.853Z",
+  "recordings": [
+    {
+      "id": 142264552,
+      "title": "Florisol | Implementation ",
+      "url": "https://fathom.video/share/tckvQqW-2HvzNeJsDZsvy8AV34Dp-tPq",
+      "date": "2026-04-29T19:00:00Z",
+      "duration_minutes": 66,
+      "host": "Valentina Espinel"
+    }
+  ]
 }

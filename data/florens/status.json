@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-29T17:11:40.754Z",
+  "updated_at": "2026-04-30T17:05:17.837Z",
   "statuses": [
     {
       "id": 1,
@@ -46,8 +46,8 @@
     {
       "id": 8,
       "text": "Tracking: How to track inbound shipments",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 9,
@@ -118,8 +118,8 @@
     {
       "id": 20,
       "text": "How to Get Paid: AR: Receive Payments / POS machine, CC and ePayments",
-      "status": "partial",
-      "hits": 1
+      "status": "done",
+      "hits": 2
     },
     {
       "id": 21,
@@ -190,8 +190,8 @@
     {
       "id": 32,
       "text": "Set up always on Buyer / Vendor Connections",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 33,
@@ -226,8 +226,8 @@
     {
       "id": 38,
       "text": "A/P - PO Reconciliation, AWB and Inbound Truck Freight Reconciliation",
-      "status": "not_started",
-      "hits": 0
+      "status": "partial",
+      "hits": 1
     },
     {
       "id": 39,

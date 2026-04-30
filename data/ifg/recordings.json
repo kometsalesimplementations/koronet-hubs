@@ -1,4 +1,13 @@
 {
-  "updated_at": "2026-04-29T17:11:40.760Z",
-  "recordings": []
+  "updated_at": "2026-04-30T17:05:17.866Z",
+  "recordings": [
+    {
+      "id": 142460855,
+      "title": "International Fresh Group | Implementation ",
+      "url": "https://fathom.video/share/cM_mXgy41XziJ6ygtmry3tj9otCX1go-",
+      "date": "2026-04-30T13:00:00Z",
+      "duration_minutes": 44,
+      "host": "George Vélez"
+    }
+  ]
 }

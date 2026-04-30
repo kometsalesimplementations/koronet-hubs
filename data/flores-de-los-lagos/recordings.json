@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-29T17:11:40.780Z",
+  "updated_at": "2026-04-30T17:05:17.876Z",
   "recordings": [
     {
       "id": 138008537,
@@ -7,14 +7,6 @@
       "url": "https://fathom.video/share/X9eyQtEdsBaZ1zarRp5qxxZZwKQKBvGp",
       "date": "2026-04-14T20:15:00Z",
       "duration_minutes": 59,
-      "host": "Felipe Mesa"
-    },
-    {
-      "id": 136427375,
-      "title": "Placeholder Komet Core Demo: Flores De Los Lagos",
-      "url": "https://fathom.video/share/iL_zT7cbrdxCyAq6TsD4aharzLznYbvG",
-      "date": "2026-04-08T19:00:00Z",
-      "duration_minutes": 41,
       "host": "Felipe Mesa"
     }
   ]

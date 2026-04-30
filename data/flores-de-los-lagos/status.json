@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-29T17:11:40.779Z",
+  "updated_at": "2026-04-30T17:05:17.876Z",
   "statuses": [
     {
       "id": 1,
@@ -52,8 +52,8 @@
     {
       "id": 9,
       "text": "Pricing: GPM, AWB Freight, Handling and other charges",
-      "status": "done",
-      "hits": 2
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 10,

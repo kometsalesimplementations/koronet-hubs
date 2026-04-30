@@ -36,13 +36,6 @@
       "pmt_id": null,
       "fathom_client_filter": "International Fresh",
       "hub_file": "ifg-client.html"
-    },
-    {
-      "slug": "flores-de-los-lagos",
-      "name": "Flores de Los Lagos",
-      "pmt_id": null,
-      "fathom_client_filter": "Flores de Los Lagos",
-      "hub_file": "flores-de-los-lagos-client.html"
     }
   ]
 }

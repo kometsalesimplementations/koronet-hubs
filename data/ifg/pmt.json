@@ -3,27 +3,27 @@
   "id": null,
   "name": "International Fresh Group, LLC",
   "overall": {
-    "completion_pct": 0,
-    "status": "Sales Handover",
+    "completion_pct": 25,
+    "status": "Kickoff and Preparation",
     "health": "On Track",
-    "level_of_effort": null,
-    "health_comment": "Manual entry. Contract start, kickoff and go-live target provided by Valentina."
+    "level_of_effort": "High",
+    "health_comment": "Flash implementation: 2 weeks (May 4-15). Wilma had show on May 15, agreed to compress 6-week standard to 2 weeks. Daily Mon-Fri 8AM ET sessions."
   },
   "dates": {
     "start": "2026-04-28",
-    "kickoff": "2026-04-28",
-    "deadline": "2026-06-09",
-    "estimated_go_live": "2026-06-09",
-    "days_to_go_live": 42
+    "kickoff": "2026-04-30",
+    "deadline": "2026-05-15",
+    "estimated_go_live": "2026-05-15",
+    "days_to_go_live": 15
   },
   "team": {
     "project_lead": "George Velez",
     "project_owner": "George Velez"
   },
   "phases": [
-    { "name": "Sales Handover", "completion_pct": 0 },
-    { "name": "Account Configuration", "completion_pct": 0 },
-    { "name": "Kickoff", "completion_pct": 0 },
+    { "name": "Sales Handover", "completion_pct": 100 },
+    { "name": "Account Configuration", "completion_pct": 50 },
+    { "name": "Kickoff", "completion_pct": 100 },
     { "name": "Training", "completion_pct": 0 },
     { "name": "Pre Go Live", "completion_pct": 0 },
     { "name": "Post Go Live", "completion_pct": 0 }

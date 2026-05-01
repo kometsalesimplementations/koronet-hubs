@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-30T20:18:05.989Z",
+  "updated_at": "2026-05-01T15:37:53.992Z",
   "statuses": [
     {
       "id": 1,
@@ -40,8 +40,8 @@
     {
       "id": 7,
       "text": "Grower Portal / Grower Menu: Add products to an AWB and print labels",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 8,
@@ -58,14 +58,14 @@
     {
       "id": 10,
       "text": "How to Manage Future Inventory",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 11,
       "text": "How to create eCommerce orders & How to get Paid: Pay Now and Schedule Payment",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 12,
@@ -88,8 +88,8 @@
     {
       "id": 15,
       "text": "Order Entry: Invoice confirmation and Print Documents",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 16,
@@ -100,8 +100,8 @@
     {
       "id": 17,
       "text": "How to sell Open Market - eCommerce orders and Manual Orders",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 18,
@@ -220,8 +220,8 @@
     {
       "id": 37,
       "text": "How to create Customer and Vendor Standing Order's",
-      "status": "partial",
-      "hits": 1
+      "status": "not_started",
+      "hits": 0
     },
     {
       "id": 38,

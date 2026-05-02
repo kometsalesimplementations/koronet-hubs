@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-01T15:35:40.944Z",
+  "fetched_at": "2026-05-02T14:39:16.857Z",
   "id": "a9PVL000000Jjkb2AC",
   "name": "Komet Core Importer/Grower Lartisan Roses LLC",
   "overall": {
@@ -14,7 +14,7 @@
     "kickoff": "2026-04-15",
     "deadline": "2026-06-26",
     "estimated_go_live": "2026-05-26",
-    "days_to_go_live": 25
+    "days_to_go_live": 24
   },
   "team": {
     "project_lead": "Manuel Szajowicz",
@@ -28,7 +28,7 @@
       "health": "On Track",
       "start_date": "2026-04-13",
       "end_date": "2026-04-13",
-      "days_to_go": -18,
+      "days_to_go": -19,
       "task_count": 8,
       "daily_progress": null,
       "raw": {
@@ -59,7 +59,7 @@
         "inov8__Sum_Of_Task_Completion__c": 700,
         "inov8__Task_Count__c": 8,
         "inov8__Daily_progress__c": null,
-        "inov8__Days_to_go__c": -18,
+        "inov8__Days_to_go__c": -19,
         "inov8__Deadline_formula__c": "2026-04-13",
         "inov8__Duration__c": 1,
         "inov8__Expected_age_of_completion__c": 100,
@@ -85,7 +85,7 @@
       "health": "On Track",
       "start_date": "2026-04-13",
       "end_date": "2026-04-15",
-      "days_to_go": -16,
+      "days_to_go": -17,
       "task_count": 6,
       "daily_progress": "50 %",
       "raw": {
@@ -116,7 +116,7 @@
         "inov8__Sum_Of_Task_Completion__c": 500,
         "inov8__Task_Count__c": 6,
         "inov8__Daily_progress__c": "50 %",
-        "inov8__Days_to_go__c": -16,
+        "inov8__Days_to_go__c": -17,
         "inov8__Deadline_formula__c": "2026-04-15",
         "inov8__Duration__c": 3,
         "inov8__Expected_age_of_completion__c": 100,
@@ -142,7 +142,7 @@
       "health": "On Track",
       "start_date": "2026-04-15",
       "end_date": "2026-04-15",
-      "days_to_go": -16,
+      "days_to_go": -17,
       "task_count": 5,
       "daily_progress": null,
       "raw": {
@@ -173,7 +173,7 @@
         "inov8__Sum_Of_Task_Completion__c": 500,
         "inov8__Task_Count__c": 5,
         "inov8__Daily_progress__c": null,
-        "inov8__Days_to_go__c": -16,
+        "inov8__Days_to_go__c": -17,
         "inov8__Deadline_formula__c": "2026-04-15",
         "inov8__Duration__c": 1,
         "inov8__Expected_age_of_completion__c": 100,
@@ -199,7 +199,7 @@
       "health": "On Track",
       "start_date": "2026-04-16",
       "end_date": "2026-05-26",
-      "days_to_go": 25,
+      "days_to_go": 24,
       "task_count": 54,
       "daily_progress": "2.5 %",
       "raw": {
@@ -230,10 +230,10 @@
         "inov8__Sum_Of_Task_Completion__c": 4300,
         "inov8__Task_Count__c": 54,
         "inov8__Daily_progress__c": "2.5 %",
-        "inov8__Days_to_go__c": 25,
+        "inov8__Days_to_go__c": 24,
         "inov8__Deadline_formula__c": "2026-05-26",
         "inov8__Duration__c": 41,
-        "inov8__Expected_age_of_completion__c": 37.5,
+        "inov8__Expected_age_of_completion__c": 40,
         "inov8__Health_Icon__c": "<img src=\"/resource/inov8__PMT_Status_logos/On_Track.png\" alt=\"status icon\" style=\"height:17px; width:17px;\" border=\"0\"/>",
         "inov8__Kickoff_formula__c": "2026-04-16",
         "inov8__Length__c": 40,
@@ -256,7 +256,7 @@
       "health": "On Track",
       "start_date": "2026-05-20",
       "end_date": "2026-05-26",
-      "days_to_go": 25,
+      "days_to_go": 24,
       "task_count": 5,
       "daily_progress": "16.66666666666666666666666666666666666667 %",
       "raw": {
@@ -287,10 +287,10 @@
         "inov8__Sum_Of_Task_Completion__c": 400,
         "inov8__Task_Count__c": 5,
         "inov8__Daily_progress__c": "16.66666666666666666666666666666666666667 %",
-        "inov8__Days_to_go__c": 25,
+        "inov8__Days_to_go__c": 24,
         "inov8__Deadline_formula__c": "2026-05-26",
         "inov8__Duration__c": 7,
-        "inov8__Expected_age_of_completion__c": -316.67,
+        "inov8__Expected_age_of_completion__c": -300,
         "inov8__Health_Icon__c": "<img src=\"/resource/inov8__PMT_Status_logos/On_Track.png\" alt=\"status icon\" style=\"height:17px; width:17px;\" border=\"0\"/>",
         "inov8__Kickoff_formula__c": "2026-05-20",
         "inov8__Length__c": 6,
@@ -313,7 +313,7 @@
       "health": "On Track",
       "start_date": "2026-05-27",
       "end_date": "2026-06-26",
-      "days_to_go": 56,
+      "days_to_go": 55,
       "task_count": 3,
       "daily_progress": "3.33333333333333333333333333333333333333 %",
       "raw": {
@@ -344,10 +344,10 @@
         "inov8__Sum_Of_Task_Completion__c": 0,
         "inov8__Task_Count__c": 3,
         "inov8__Daily_progress__c": "3.33333333333333333333333333333333333333 %",
-        "inov8__Days_to_go__c": 56,
+        "inov8__Days_to_go__c": 55,
         "inov8__Deadline_formula__c": "2026-06-26",
         "inov8__Duration__c": 31,
-        "inov8__Expected_age_of_completion__c": -86.67,
+        "inov8__Expected_age_of_completion__c": -83.33,
         "inov8__Health_Icon__c": "<img src=\"/resource/inov8__PMT_Status_logos/On_Track.png\" alt=\"status icon\" style=\"height:17px; width:17px;\" border=\"0\"/>",
         "inov8__Kickoff_formula__c": "2026-05-27",
         "inov8__Length__c": 30,
@@ -422,7 +422,7 @@
     "inov8__Sum_of_sum_of_percentage_completion__c": 6400,
     "inov8__Sum_of_task_count_child_project__c": 0,
     "inov8__Sum_of_tasks_count__c": 81,
-    "inov8__Days_to_go__c": 56,
+    "inov8__Days_to_go__c": 55,
     "inov8__Deadline_formula__c": "2026-06-26",
     "inov8__Duration__c": 75,
     "inov8__End_Fiscal_Year__c": "FY27",
@@ -453,6 +453,6 @@
     "Kickoff_Date__c": "2026-04-15",
     "Implementation_Doc_Link__c": "https://kometsalesimplementations.github.io/koronet-hubs/lartisan-client.html   🔑   PasswordLargoUnico123!",
     "Estimated_Go_Live_Date__c": "2026-05-26",
-    "Days_to_Estimated_Go_Live__c": 25
+    "Days_to_Estimated_Go_Live__c": 24
   }
 }

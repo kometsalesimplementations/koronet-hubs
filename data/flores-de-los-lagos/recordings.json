@@ -1,4 +1,13 @@
 {
-  "updated_at": "2026-05-03T15:07:48.375Z",
-  "recordings": []
+  "updated_at": "2026-05-04T18:00:00.000Z",
+  "recordings": [
+    {
+      "id": 655926049,
+      "title": "Flores de los Lagos | Implementation",
+      "url": "https://fathom.video/calls/655926049",
+      "date": "2026-04-30T19:00:00Z",
+      "duration_minutes": 61,
+      "host": "George Vélez"
+    }
+  ]
 }
